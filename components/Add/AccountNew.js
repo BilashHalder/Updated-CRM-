@@ -109,25 +109,25 @@ else{
      <Box component='form' onSubmit={formHandler} >
 
      <Grid container spacing={2} direction="row">
-      <Grid item md={4} xs={12}>
+      <Grid item md={6} xs={12}>
       <TextField label=" Bank Account Number"  type="text" value={account} required fullWidth  InputLabelProps={{ shrink: true}}  onChange={(e)=>{ setAccount((e.target.value)); setVerify(true);}} />
       </Grid>
 
-      <Grid item md={4} xs={12}>
+      <Grid item md={6} xs={12}>
       <TextField label="Confirm Bank Account Number"  type="password" value={caccount} required fullWidth  InputLabelProps={{ shrink: true}}  onChange={(e)=>{ setCAccount(e.target.value); setVerify(true)}} />
       </Grid>
 
-      <Grid item md={4} xs={12}>
+      <Grid item md={6} xs={12}>
       <TextField  label="IFSC Code" type="text"  value={ifsc} required  fullWidth  InputLabelProps={{ shrink: true}}  onChange={(e)=>{ setIfsc(e.target.value); setVerify(true)}}/>
       </Grid >
-      <Grid item md={4} xs={12}>
+      <Grid item md={6} xs={12}>
       <TextField  label="Bank Name" type="text"  value={bank}  required disabled  fullWidth  InputLabelProps={{ shrink: true}}/>
       </Grid >
-      <Grid item md={4} xs={12}>
+      <Grid item md={6} xs={12}>
       <TextField  label="Branch Name" type="text"  value={branch}  required disabled  fullWidth  InputLabelProps={{ shrink: true}}/>
       </Grid >
 
-      <Grid item md={4} xs={12} >
+      <Grid item md={6} xs={12} >
       <Stack direction="row" spacing={4} sx={{'py':'3%','px':'4%'}}>
         {
           verify?<Button variant="outlined" onClick={verifyHandler} color="success">Veify</Button>:<Button variant="outlined" type={'submit'} color="success">Save</Button>

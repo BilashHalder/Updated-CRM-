@@ -16,12 +16,7 @@ const UserLayout = ({ children }) => {
  
   const hidden = useMediaQuery(theme => theme.breakpoints.down('lg'))
 
-  const UpgradeToProImg = () => {
-    return (
-      <Box sx={{ mx: 'auto' }}>
-      </Box>
-    )
-  }
+ 
 
   return (
     <VerticalLayout

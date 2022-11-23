@@ -2,7 +2,8 @@
 import { useState, Fragment } from 'react'
 
 // ** Next Import
-import { useRouter } from 'next/router'
+import { useRouter} from 'next/router';
+import Router from 'next/router';
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -113,7 +114,7 @@ const UserDropdown = () => {
           </Box>
         </MenuItem>
         <Divider />
-        <MenuItem sx={{ py: 2 }} onClick={() => handleDropdownClose('/pages/login')}>
+        <MenuItem sx={{ py: 2 }} onClick={() =>{localStorage.removeItem('crzn');  Router.push('/login')} }>
           <LogoutVariant sx={{ marginRight: 2, fontSize: '1.375rem', color: 'text.secondary' }} />
           Logout
         </MenuItem>
