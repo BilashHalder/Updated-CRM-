@@ -17,34 +17,28 @@ import AccountOutline from 'mdi-material-ui/AccountOutline'
 
 const salesData = [
   {
-    stats: '245k',
-    title: 'Sales',
+    stats: '₹ 24500',
+    title: 'Invesment',
     color: 'primary',
     icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
   },
   {
-    stats: '12.5k',
+    stats: '12',
     title: 'Customers',
     color: 'success',
     icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
   },
   {
-    stats: '1.54k',
+    stats: '₹ 5000',
     color: 'warning',
-    title: 'Products',
+    title: 'Profit',
     icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
-  },
-  {
-    stats: '$88k',
-    color: 'info',
-    title: 'Revenue',
-    icon: <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
   }
 ]
 
 const renderStats = () => {
   return salesData.map((item, index) => (
-    <Grid item xs={12} sm={3} key={index}>
+    <Grid item xs={12} sm={4} key={index}>
       <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
         <Avatar
           variant='rounded'
@@ -72,7 +66,7 @@ const StatisticsCard = () => {
   return (
     <Card>
       <CardHeader
-        title='Statistics Card'
+        title='Statistics Report'
         action={
           <IconButton size='small' aria-label='settings' className='card-more-options' sx={{ color: 'text.secondary' }}>
             <DotsVertical />
@@ -82,8 +76,7 @@ const StatisticsCard = () => {
           <Typography variant='body2'>
             <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
               Total 48.5% growth
-            </Box>{' '}
-            😎 this month
+            </Box>  this month
           </Typography>
         }
         titleTypographyProps={{

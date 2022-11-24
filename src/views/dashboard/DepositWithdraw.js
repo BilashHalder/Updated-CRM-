@@ -6,92 +6,10 @@ import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import MuiDivider from '@mui/material/Divider'
+import axios from 'axios';
 
-const depositData = [
-  {
-    logoWidth: 28,
-    logoHeight: 29,
-    amount: '+$4,650',
-    subtitle: 'Sell UI Kit',
-    title: 'Gumroad Account',
-    logo: '/images/logos/gumroad.png'
-  },
-  {
-    logoWidth: 38,
-    logoHeight: 38,
-    amount: '+$92,705',
-    title: 'Mastercard',
-    subtitle: 'Wallet deposit',
-    logo: '/images/logos/mastercard-label.png'
-  },
-  {
-    logoWidth: 20,
-    logoHeight: 28,
-    amount: '+$957',
-    title: 'Stripe Account',
-    subtitle: 'iOS Application',
-    logo: '/images/logos/stripe.png'
-  },
-  {
-    logoWidth: 34,
-    logoHeight: 32,
-    amount: '+$6,837',
-    title: 'American Bank',
-    subtitle: 'Bank Transfer',
-    logo: '/images/logos/american-bank.png'
-  },
-  {
-    logoWidth: 33,
-    logoHeight: 22,
-    amount: '+$446',
-    title: 'Bank Account',
-    subtitle: 'Wallet deposit',
-    logo: '/images/logos/citi-bank.png'
-  }
-]
+import {useState,useEffect} from 'react'
 
-const withdrawData = [
-  {
-    logoWidth: 29,
-    logoHeight: 30,
-    amount: '-$145',
-    title: 'Google Adsense',
-    subtitle: 'Paypal deposit',
-    logo: '/images/logos/google.png'
-  },
-  {
-    logoWidth: 34,
-    logoHeight: 34,
-    amount: '-$1870',
-    title: 'Github Enterprise',
-    logo: '/images/logos/github.png',
-    subtitle: 'Security & compliance'
-  },
-  {
-    logoWidth: 30,
-    logoHeight: 30,
-    amount: '-$450',
-    title: 'Upgrade Slack Plan',
-    subtitle: 'Debit card deposit',
-    logo: '/images/logos/slack.png'
-  },
-  {
-    logoWidth: 30,
-    logoHeight: 30,
-    amount: '-$540',
-    title: 'Digital Ocean',
-    subtitle: 'Cloud Hosting',
-    logo: '/images/logos/digital-ocean.png'
-  },
-  {
-    logoWidth: 36,
-    logoHeight: 21,
-    amount: '-$21',
-    title: 'AWS Account',
-    logo: '/images/logos/aws.png',
-    subtitle: 'Choosing a Cloud Platform'
-  }
-]
 
 // Styled Divider component
 const Divider = styled(MuiDivider)(({ theme }) => ({
@@ -104,7 +22,27 @@ const Divider = styled(MuiDivider)(({ theme }) => ({
   }
 }))
 
-const DepositWithdraw = () => {
+const DepositWithdraw = (props) => {
+  const {user_id,user_type}=props;
+
+  const [transaction, setTransaction] = useState([]);
+  useEffect(() => {
+    axios({
+      method: "post",
+      url: `http://localhost:9000/api/payment/user`,
+      data: {user_id,user_type},
+    })
+      .then((response)=> {
+        setTransaction(response.data)
+      })
+      .catch((err)=> {
+       console.log(err);
+      });
+  }, [])
+  
+
+
+
   return (
     <Card sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: ['column', 'column', 'row'] }}>
       <Box sx={{ width: '100%' }}>
@@ -118,14 +56,15 @@ const DepositWithdraw = () => {
           }}
         />
         <CardContent sx={{ pb: theme => `${theme.spacing(5.5)} !important` }}>
-          {depositData.map((item, index) => {
+          {transaction.map((item, index) => {
+           if(item.to_account=='creazione' && index<5){
             return (
               <Box
                 key={item.title}
-                sx={{ display: 'flex', alignItems: 'center', mb: index !== depositData.length - 1 ? 6 : 0 }}
+                sx={{ display: 'flex', alignItems: 'center', mb: index !== transaction.length - 1 ? 6 : 0 }}
               >
                 <Box sx={{ minWidth: 38, display: 'flex', justifyContent: 'center' }}>
-                  <img src={item.logo} alt={item.title} width={item.logoWidth} height={item.logoHeight} />
+                  <img src={'/images/logos/gumroad.png'} alt={item.id} width={30} height={30} />
                 </Box>
                 <Box
                   sx={{
@@ -139,14 +78,15 @@ const DepositWithdraw = () => {
                 >
                   <Box sx={{ marginRight: 2, display: 'flex', flexDirection: 'column' }}>
                     <Typography sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{item.title}</Typography>
-                    <Typography variant='caption'>{item.subtitle}</Typography>
+                    <Typography variant='caption'>{item.to_account.toUpperCase()}</Typography>
                   </Box>
                   <Typography variant='subtitle2' sx={{ fontWeight: 600, color: 'success.main' }}>
-                    {item.amount}
+                    {`₹ `+item.ammount}
                   </Typography>
                 </Box>
               </Box>
             )
+           }
           })}
         </CardContent>
       </Box>
@@ -164,35 +104,39 @@ const DepositWithdraw = () => {
           }}
         />
         <CardContent sx={{ pb: theme => `${theme.spacing(5.5)} !important` }}>
-          {withdrawData.map((item, index) => {
-            return (
-              <Box
-                key={item.title}
-                sx={{ display: 'flex', alignItems: 'center', mb: index !== depositData.length - 1 ? 6 : 0 }}
-              >
-                <Box sx={{ minWidth: 36, display: 'flex', justifyContent: 'center' }}>
-                  <img src={item.logo} alt={item.title} width={item.logoWidth} height={item.logoHeight} />
-                </Box>
+          
+          {transaction.map((item, index) => {
+            if(item.from_account=='creazione'){
+              return (
                 <Box
-                  sx={{
-                    ml: 4,
-                    width: '100%',
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                  }}
+                  key={item.title}
+                  sx={{ display: 'flex', alignItems: 'center', mb: index !== transaction.length - 1 ? 6 : 0 }}
                 >
-                  <Box sx={{ marginRight: 2, display: 'flex', flexDirection: 'column' }}>
-                    <Typography sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{item.title}</Typography>
-                    <Typography variant='caption'>{item.subtitle}</Typography>
+                  <Box sx={{ minWidth: 36, display: 'flex', justifyContent: 'center' }}>
+                    <img src={'/images/logos/citi-bank.png'} alt={item.id} width={30} height={30} />
                   </Box>
-                  <Typography variant='subtitle2' sx={{ fontWeight: 600, color: 'error.main' }}>
-                    {item.amount}
-                  </Typography>
+                  <Box
+                    sx={{
+                      ml: 4,
+                      width: '100%',
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      alignItems: 'center',
+                      justifyContent: 'space-between'
+                    }}
+                  >
+                    <Box sx={{ marginRight: 2, display: 'flex', flexDirection: 'column' }}>
+                      <Typography sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{item.title}</Typography>
+                      <Typography variant='caption'>{item.transaction_time.slice(0,10)}</Typography>
+                    </Box>
+                    <Typography variant='subtitle2' sx={{ fontWeight: 600, color: 'error.main' }}>
+                    {`₹ `+item.ammount}
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
-            )
+              )
+            }
+          
           })}
         </CardContent>
       </Box>
