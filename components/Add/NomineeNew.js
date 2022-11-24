@@ -12,7 +12,7 @@ export default function NomineeNew(props) {
 
   //Common States For All
   const [message, setMessage] = useState('This is a success alert — check it out!');
-  const [alertShow, setAlertShow] = useState(true);
+  const [alertShow, setAlertShow] = useState(false);
   const [alertColor, setaAertColor] = useState('error');
 
 
@@ -87,17 +87,17 @@ export default function NomineeNew(props) {
       <Typography align={'center'} variant={'h5'} sx={{'marginBottom':'5%'}}>Add New Nominee</Typography>
      <Box component='form' onSubmit={formHandler} >
      <Grid container spacing={2} direction="row">
-      <Grid item md={4} xs={12}>
+      <Grid item md={6} xs={12}>
       <TextField label="Full Name"  type="text" required fullWidth  InputLabelProps={{ shrink: true}} value={name} onChange={(e)=>{
         setName(e.target.value);
       }} />
       </Grid>
-      <Grid item md={4} xs={12}>
+      <Grid item md={6} xs={12}>
       <TextField  label="Date Of Birth" type="date"  required  fullWidth value={dob}  InputLabelProps={{ shrink: true}} onChange={(e)=>{
         setDob(e.target.value)
       }}/>
       </Grid >
-      <Grid item md={4} xs={12} >
+      <Grid item md={6} xs={12} >
       <Stack direction="row" spacing={4} sx={{'py':'3%','px':'4%'}}>
       <Button variant="outlined" type={'submit'} color="success">Save</Button>
       <Button variant="outlined" color="error" onClick={resetForm}>Cancel</Button>

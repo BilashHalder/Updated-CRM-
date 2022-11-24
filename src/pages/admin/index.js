@@ -1,7 +1,7 @@
 import React from 'react'
 
-export default function AdminDashboard() {
+export default function index() {
   return (
-    <div>Asmin Salary</div>
+    <div>Admin DashBoard</div>
   )
 }

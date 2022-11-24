@@ -3,7 +3,8 @@ import {Grid,Typography,Box,Button,Stack,Select,MenuItem,FormControl,InputLabel,
 import axios from 'axios';
 import {baseUrl} from '../../util/lib';
 
-export default function CustomerNew() {
+export default function CustomerNew(props) {
+  const {ref_key,fun}=props
   //Common States For All
   const [message, setMessage] = useState('This is a success alert — check it out!');
   const [alertShow, setAlertShow] = useState(false);
@@ -13,7 +14,14 @@ export default function CustomerNew() {
 const [name, setName] = useState('');
 const [phone, setPhone] = useState('');
 const [email, setEmail] = useState('');
-const [referel, setReferel] = useState('');
+if(ref_key)
+{
+  const [referel, setReferel] = useState(ref_key);
+}
+else 
+{
+  const [referel, setReferel] = useState('');
+}
 const [gender, setGender] = useState('');
 const [img, setImg] = useState(null);
 
@@ -177,7 +185,7 @@ else{
         autoHideDuration={2000} onClose={snackClose}>
       <Alert severity={alertColor}>{message}</Alert>
       </Snackbar>
-
+      
     </Grid>
   )
 }
