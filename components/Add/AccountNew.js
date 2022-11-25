@@ -79,7 +79,6 @@ else{
   })
   .catch(function (error) {
     setAlertShow(true);
-    console.log(error)
     setMessage('Invalid IFSC Code!');
     setaAertColor('error');
     setBank('');

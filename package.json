@@ -47,6 +47,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/server": "^11.4.0",
     "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.10.15",
     "@mui/lab": "^5.0.0-alpha.70",
     "@mui/material": "^5.10.14",
     "@popperjs/core": "^2.11.2",

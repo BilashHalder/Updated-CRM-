@@ -1,126 +1,299 @@
 // ** React Imports
-import { forwardRef, useState,useEffect } from 'react'
+import { useState,useEffect  } from 'react'
+import axios from 'axios'
 
 // ** MUI Imports
+import {Box,Alert,Snackbar} from '@mui/material'
 import Grid from '@mui/material/Grid'
-import Radio from '@mui/material/Radio'
-import Select from '@mui/material/Select'
+import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
-import MenuItem from '@mui/material/MenuItem'
-import TextField from '@mui/material/TextField'
-import FormLabel from '@mui/material/FormLabel'
+import Divider from '@mui/material/Divider'
 import InputLabel from '@mui/material/InputLabel'
-import RadioGroup from '@mui/material/RadioGroup'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import FormControl from '@mui/material/FormControl'
 import OutlinedInput from '@mui/material/OutlinedInput'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import InputAdornment from '@mui/material/InputAdornment'
 
-// ** Third Party Imports
-import DatePicker from 'react-datepicker'
+// ** Icons Imports
+import EyeOutline from 'mdi-material-ui/EyeOutline'
+import KeyOutline from 'mdi-material-ui/KeyOutline'
+import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
+import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
 
-// ** Styled Components
-import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
+const TabSecurity = (props) => {
+  // ** States
+  const [message, setMessage] = useState('This is a success alert — check it out!');
+  const [alertShow, setAlertShow] = useState(false);
+  const [alertColor, setaAertColor] = useState('error');
 
-const CustomInput = forwardRef((props, ref) => {
-  return <TextField inputRef={ref} label='Birth Date' fullWidth {...props} />
-})
 
-const UserEditInfo = () => {
-  // ** State
-  const [date, setDate] = useState(null)
+  const {user_id}=props;
+  const [img, setImg] = useState(null);
+  const [values, setValues] = useState({
+    newPassword: '',
+    currentPassword: '',
+    showNewPassword: false,
+    confirmNewPassword: '',
+    showCurrentPassword: false,
+    showConfirmNewPassword: false
+  })
+
+  // Handle Current Password
+  const handleCurrentPasswordChange = prop => event => {
+    setValues({ ...values, [prop]: event.target.value })
+  }
+
+  const handleClickShowCurrentPassword = () => {
+    setValues({ ...values, showCurrentPassword: !values.showCurrentPassword })
+  }
+
+  const handleMouseDownCurrentPassword = event => {
+    event.preventDefault()
+  }
+
+  // Handle New Password
+  const handleNewPasswordChange = prop => event => {
+    setValues({ ...values, [prop]: event.target.value })
+  }
+
+  const handleClickShowNewPassword = () => {
+    setValues({ ...values, showNewPassword: !values.showNewPassword })
+  }
+
+  const handleMouseDownNewPassword = event => {
+    event.preventDefault()
+  }
+
+  // Handle Confirm New Password
+  const handleConfirmNewPasswordChange = prop => event => {
+    setValues({ ...values, [prop]: event.target.value })
+  }
+
+  const handleClickShowConfirmNewPassword = () => {
+    setValues({ ...values, showConfirmNewPassword: !values.showConfirmNewPassword })
+  }
+
+  const handleMouseDownConfirmNewPassword = event => {
+    event.preventDefault()
+  }
+  const snackClose=()=>{ setAlertShow(false);} 
+
+  const handleForm=()=>{
+    if(!values.currentPassword)
+    {
+      setAlertShow(true);
+      setMessage('Please Enter Your Password');
+      setaAertColor('error');
+    }
+    else if(!values.newPassword || values.newPassword.length<8 ){
+      setAlertShow(true);
+      setMessage('Please Enter New Password Atleast 8 Character');
+      setaAertColor('error');
+    }
+  
+    else if(values.newPassword !=values.confirmNewPassword){
+      setAlertShow(true);
+      setMessage('Confirm Password Does Not Match');
+      setaAertColor('error');
+    }
+
+    else if(img && img.size > 300000){
+      setAlertShow(true);
+      setMessage('Please Upload Image Less Than 300Kb');
+      setaAertColor('error'); 
+    }
+    else{
+      let data = new FormData();
+      data.append('pass',values.currentPassword);
+      data.append('newpass',values.confirmNewPassword);
+      if(img)
+      data.append('image',img);
+      axios({
+        method: "put",
+        url: `http://localhost:9000/api/customer/${user_id}`,
+        data: data,
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+        .then((response)=> {
+          setAlertShow(true);
+          setMessage("Your Information Updated Sucessfully");
+          setaAertColor('success');
+          resetForm();
+        })
+        .catch((err)=> {
+          setAlertShow(true);
+          if(err.response.data)
+          {
+            setMessage(err.response.data.message);
+            setaAertColor('error');
+            setAlertShow(true);
+          }
+          else
+          setMessage('Please Try Again Later!');
+          setaAertColor('error');
+
+          console.log(err)
+        });
+    }
+
+
+  
+  }
+    
+  const [customer, setcustomer] = useState(null)
+
+  useEffect(() => {
+ 
+    axios({
+      method: "get",
+      url: `http://localhost:9000/api/customer/${user_id}`,
+    })
+      .then((response)=> {
+        setcustomer(response.data)
+      })
+      .catch((err)=> {
+       console.log(err);
+      });
+   
+  }, [])
+
 
   return (
-    <CardContent>
-      <form>
-        <Grid container spacing={7}>
-          <Grid item xs={12} sx={{ marginTop: 4.8 }}>
-            <TextField
-              fullWidth
-              multiline
-              label='Bio'
-              minRows={2}
-              placeholder='Bio'
-              defaultValue='The name’s John Deo. I am a tireless seeker of knowledge, occasional purveyor of wisdom and also, coincidentally, a graphic designer. Algolia helps businesses across industries quickly create relevant 😎, scalable 😀, and lightning 😍 fast search and discovery experiences.'
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <DatePickerWrapper>
-              <DatePicker
-                selected={date}
-                showYearDropdown
-                showMonthDropdown
-                id='account-settings-date'
-                placeholderText='MM-DD-YYYY'
-                customInput={<CustomInput />}
-                onChange={date => setDate(date)}
-              />
-            </DatePickerWrapper>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField fullWidth type='number' label='Phone' placeholder='(123) 456-7890' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label='Website'
-              placeholder='https://example.com/'
-              defaultValue='https://themeselection.com/'
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Country</InputLabel>
-              <Select label='Country' defaultValue='USA'>
-                <MenuItem value='USA'>USA</MenuItem>
-                <MenuItem value='UK'>UK</MenuItem>
-                <MenuItem value='Australia'>Australia</MenuItem>
-                <MenuItem value='Germany'>Germany</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel id='form-layouts-separator-multiple-select-label'>Languages</InputLabel>
-              <Select
-                multiple
-                defaultValue={['English']}
-                id='account-settings-multiple-select'
-                labelId='account-settings-multiple-select-label'
-                input={<OutlinedInput label='Languages' id='select-multiple-language' />}
-              >
-                <MenuItem value='English'>English</MenuItem>
-                <MenuItem value='French'>French</MenuItem>
-                <MenuItem value='Spanish'>Spanish</MenuItem>
-                <MenuItem value='Portuguese'>Portuguese</MenuItem>
-                <MenuItem value='Italian'>Italian</MenuItem>
-                <MenuItem value='German'>German</MenuItem>
-                <MenuItem value='Arabic'>Arabic</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl>
-              <FormLabel sx={{ fontSize: '0.875rem' }}>Gender</FormLabel>
-              <RadioGroup row defaultValue='male' aria-label='gender' name='account-settings-info-radio'>
-                <FormControlLabel value='male' label='Male' control={<Radio />} />
-                <FormControlLabel value='female' label='Female' control={<Radio />} />
-                <FormControlLabel value='other' label='Other' control={<Radio />} />
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12}>
-            <Button variant='contained' sx={{ marginRight: 3.5 }}>
-              Save Changes
-            </Button>
-            <Button type='reset' variant='outlined' color='secondary' onClick={() => setDate(null)}>
-              Reset
-            </Button>
+   <>
+   {
+    customer? <form>
+    <CardContent sx={{ paddingBottom: 0 }}>
+      <Grid container spacing={5}>
+        <Grid item xs={12} sm={6}>
+          <Grid container spacing={5}>
+            <Grid item xs={12} sx={{ marginTop: 4.75 }}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor='account-settings-current-password'>Current Password</InputLabel>
+                <OutlinedInput
+                  label='Current Password'
+                  value={values.currentPassword}
+                  id='account-settings-current-password'
+                  type={values.showCurrentPassword ? 'text' : 'password'}
+                  onChange={handleCurrentPasswordChange('currentPassword')}
+                  endAdornment={
+                    <InputAdornment position='end'>
+                      <IconButton
+                        edge='end'
+                        aria-label='toggle password visibility'
+                        onClick={handleClickShowCurrentPassword}
+                        onMouseDown={handleMouseDownCurrentPassword}
+                      >
+                        {values.showCurrentPassword ? <EyeOutline /> : <EyeOffOutline />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} sx={{ marginTop: 6 }}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor='account-settings-new-password'>New Password</InputLabel>
+                <OutlinedInput
+                  label='New Password'
+                  value={values.newPassword}
+                  id='account-settings-new-password'
+                  onChange={handleNewPasswordChange('newPassword')}
+                  type={values.showNewPassword ? 'text' : 'password'}
+                  endAdornment={
+                    <InputAdornment position='end'>
+                      <IconButton
+                        edge='end'
+                        onClick={handleClickShowNewPassword}
+                        aria-label='toggle password visibility'
+                        onMouseDown={handleMouseDownNewPassword}
+                      >
+                        {values.showNewPassword ? <EyeOutline /> : <EyeOffOutline />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor='account-settings-confirm-new-password'>Confirm New Password</InputLabel>
+                <OutlinedInput
+                  label='Confirm New Password'
+                  value={values.confirmNewPassword}
+                  id='account-settings-confirm-new-password'
+                  type={values.showConfirmNewPassword ? 'text' : 'password'}
+                  onChange={handleConfirmNewPasswordChange('confirmNewPassword')}
+                  endAdornment={
+                    <InputAdornment position='end'>
+                      <IconButton
+                        edge='end'
+                        aria-label='toggle password visibility'
+                        onClick={handleClickShowConfirmNewPassword}
+                        onMouseDown={handleMouseDownConfirmNewPassword}
+                      >
+                        {values.showConfirmNewPassword ? <EyeOutline /> : <EyeOffOutline />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </Grid>
           </Grid>
         </Grid>
-      </form>
+
+        <Grid
+          item
+          sm={6}
+          xs={12}
+          sx={{ display: 'flex', marginTop: [7.5, 2.5], alignItems: 'center', justifyContent: 'center' }}
+        >
+          <Box><img width={183} alt='avatar' height={256} src={img?URL.createObjectURL(img):`http://localhost:9000/uploads/images/${customer.image}`} /></Box>
+          <Box>
+          <Button  variant="outlined"  component="label" sx={{'my':'2%'}}>
+             Change Image
+                   <input type="file"  hidden accept="image/png, image/gif, image/jpeg"  onChange={(e)=>{
+            setImg(e.target.files[0]);
+              console.log(e.target.files[0]);
+          }} />
+</Button>
+          </Box>
+        </Grid>
+      </Grid>
     </CardContent>
+
+    <Divider sx={{ margin: 0 }} />
+
+    <CardContent>
+      <Box sx={{ mt: 11 }}>
+        <Button variant='contained' sx={{ marginRight: 3.5 }} 
+        onClick={handleForm}
+        >
+          Save Changes
+        </Button>
+        <Button
+          type='reset'
+          variant='outlined'
+          color='secondary'
+          onClick={() => setValues({ ...values, currentPassword: '', newPassword: '', confirmNewPassword: '' })}
+        >
+          Reset
+        </Button>
+        <Snackbar open={alertShow}
+        autoHideDuration={2000} onClose={snackClose}>
+      <Alert severity={alertColor}>{message}</Alert>
+      </Snackbar>
+      </Box>
+      
+    </CardContent>
+
+  </form>:<></>
+   }
+   </>
   )
 }
 
-export default UserEditInfo
+export default TabSecurity

@@ -534,6 +534,13 @@
   "resolved" "https://registry.npmjs.org/@mui/core-downloads-tracker/-/core-downloads-tracker-5.10.14.tgz"
   "version" "5.10.14"
 
+"@mui/icons-material@^5.10.15":
+  "integrity" "sha512-fXkz7CtYTt4AH4YYT67VFhM/A3YCUqZGGLp/3BlzRPQRNEfFKknw3MgG1S5UYrY5weti8jxMx3mwwfhVP8OMhQ=="
+  "resolved" "https://registry.npmjs.org/@mui/icons-material/-/icons-material-5.10.15.tgz"
+  "version" "5.10.15"
+  dependencies:
+    "@babel/runtime" "^7.20.1"
+
 "@mui/lab@^5.0.0-alpha.70":
   "integrity" "sha512-10Uj0Atc7gBTXKX4VV38P6RdqTQrJZxcl3HeEcytIO1S3NAGfc7gZ3Hdpnhtj5U8kcRJZZPH9LtrBbMZzxU/1A=="
   "resolved" "https://registry.npmjs.org/@mui/lab/-/lab-5.0.0-alpha.73.tgz"

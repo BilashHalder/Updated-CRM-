@@ -1,25 +1,23 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
+import axios from 'axios'
 
-// ** MUI Imports
-import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
-import Link from '@mui/material/Link'
-import Alert from '@mui/material/Alert'
-import Select from '@mui/material/Select'
+import {Box,Chip,Button, Divider,Grid,List,ListItem,ListItemAvatar,Avatar,ListItemText ,Select,MenuItem,TextField,Typography,InputLabel,AlertTitle,CardContent,FormControl} from '@mui/material'
+
 import { styled } from '@mui/material/styles'
-import MenuItem from '@mui/material/MenuItem'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
-import InputLabel from '@mui/material/InputLabel'
-import AlertTitle from '@mui/material/AlertTitle'
 import IconButton from '@mui/material/IconButton'
-import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import Button from '@mui/material/Button'
 
-// ** Icons Imports
-import Close from 'mdi-material-ui/Close'
+import EmailIcon from '@mui/icons-material/Email';
+import SettingsCellIcon from '@mui/icons-material/SettingsCell';
+import TagIcon from '@mui/icons-material/Tag';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import WcIcon from '@mui/icons-material/Wc';
+
+
+
+
+
 
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 120,
@@ -45,118 +43,103 @@ const ResetButtonStyled = styled(Button)(({ theme }) => ({
   }
 }))
 
-const UserAccount = () => {
-  // ** State
-  const [openAlert, setOpenAlert] = useState(true)
-  const [imgSrc, setImgSrc] = useState('/images/avatars/1.png')
+const UserAccount = (props) => {
+  const [customer, setcustomer] = useState(null)
+  const {user_id}=props;
 
-  const onChange = file => {
-    const reader = new FileReader()
-    const { files } = file.target
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result)
-      reader.readAsDataURL(files[0])
-    }
-  }
+useEffect(() => {
+ 
+  axios({
+    method: "get",
+    url: `http://localhost:9000/api/customer/${user_id}`,
+  })
+    .then((response)=> {
+      setcustomer(response.data)
+    })
+    .catch((err)=> {
+     console.log(err);
+    });
+ 
+}, [])
+
+ 
+  
 
   return (
     <CardContent>
-      <form>
-        <Grid container spacing={7}>
-          <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <ImgStyled src={imgSrc} alt='Profile Pic' />
-              <Box>
-                <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
-                  Upload New Photo
-                  <input
-                    hidden
-                    type='file'
-                    onChange={onChange}
-                    accept='image/png, image/jpeg'
-                    id='account-settings-upload-image'
-                  />
-                </ButtonStyled>
-                <ResetButtonStyled color='error' variant='outlined' onClick={() => setImgSrc('/images/avatars/1.png')}>
-                  Reset
-                </ResetButtonStyled>
-                <Typography variant='body2' sx={{ marginTop: 5 }}>
-                  Allowed PNG or JPEG. Max size of 800K.
-                </Typography>
-              </Box>
-            </Box>
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <TextField fullWidth label='Username' placeholder='johnDoe' defaultValue='johnDoe' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField fullWidth label='Name' placeholder='John Doe' defaultValue='John Doe' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              type='email'
-              label='Email'
-              placeholder='johnDoe@example.com'
-              defaultValue='johnDoe@example.com'
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Role</InputLabel>
-              <Select label='Role' defaultValue='admin'>
-                <MenuItem value='admin'>Admin</MenuItem>
-                <MenuItem value='author'>Author</MenuItem>
-                <MenuItem value='editor'>Editor</MenuItem>
-                <MenuItem value='maintainer'>Maintainer</MenuItem>
-                <MenuItem value='subscriber'>Subscriber</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Status</InputLabel>
-              <Select label='Status' defaultValue='active'>
-                <MenuItem value='active'>Active</MenuItem>
-                <MenuItem value='inactive'>Inactive</MenuItem>
-                <MenuItem value='pending'>Pending</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField fullWidth label='Company' placeholder='ABC Pvt. Ltd.' defaultValue='ABC Pvt. Ltd.' />
-          </Grid>
-
-          {openAlert ? (
-            <Grid item xs={12} sx={{ mb: 3 }}>
-              <Alert
-                severity='warning'
-                sx={{ '& a': { fontWeight: 400 } }}
-                action={
-                  <IconButton size='small' color='inherit' aria-label='close' onClick={() => setOpenAlert(false)}>
-                    <Close fontSize='inherit' />
-                  </IconButton>
-                }
-              >
-                <AlertTitle>Your email is not confirmed. Please check your inbox.</AlertTitle>
-                <Link href='/' onClick={e => e.preventDefault()}>
-                  Resend Confirmation
-                </Link>
-              </Alert>
-            </Grid>
-          ) : null}
-
-          <Grid item xs={12}>
-            <Button variant='contained' sx={{ marginRight: 3.5 }}>
-              Save Changes
-            </Button>
-            <Button type='reset' variant='outlined' color='secondary'>
-              Reset
-            </Button>
-          </Grid>
+     {
+      customer? <Box>
+      <Grid container spacing={4}>
+        
+        <Grid item xs={6} md={4} sx={{ marginTop: 4.8, marginBottom: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <ImgStyled src={`http://localhost:9000/uploads/images/${customer.image}`} alt={customer.name} />
+          </Box>
         </Grid>
-      </form>
+
+
+        <Grid item xs={6} sm={6} md={4}>
+        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+      <ListItem>
+        <ListItemAvatar>
+          <Avatar>
+            <EmailIcon/>
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary={customer.email}  />
+      </ListItem>
+      <ListItem>
+        <ListItemAvatar>
+          <Avatar>
+          <SettingsCellIcon/>
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary={customer.phone}  />
+      </ListItem>
+      <ListItem>
+        <ListItemAvatar>
+          <Avatar>
+           <TagIcon/>
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary={customer.referral_key} secondary="Referral Id" />
+      </ListItem>
+    </List>
+
+        </Grid>
+
+        <Grid item xs={6} sm={6} md={4}>
+        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+      <ListItem>
+        <ListItemAvatar>
+          <Avatar>
+            <AccountBalanceWalletIcon/>
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary={`₹  ${parseFloat(customer.balance)}`}  />
+      </ListItem>
+      <ListItem>
+        <ListItemAvatar>
+          <Avatar>
+          <StarBorderIcon/>
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary={customer.status==0?"Deactive":customer.status==1?"Active":"Others"}  sx={{color:'red'}} secondary='Status'/>
+      </ListItem>
+      <ListItem>
+        <ListItemAvatar>
+          <Avatar>
+           <WcIcon/>
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary={customer.gender==1?"Male":customer.gender==2?"Female":"Others"}  />
+      </ListItem>
+    </List>
+        </Grid>
+  
+      </Grid>
+    </Box>:<></>
+     }
     </CardContent>
   )
 }
