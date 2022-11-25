@@ -7,11 +7,12 @@ import {baseUrl} from '../../util/lib'
 
 export default function AccountNew(props) {
 
-  const {user_id,user_type}=props;
+  const {user_id,user_type,fun}=props;
   //Common States For All
   const [message, setMessage] = useState('This is a success alert — check it out!');
   const [alertShow, setAlertShow] = useState(false);
   const [alertColor, setaAertColor] = useState('error');
+
 
 
 //Form States 
@@ -134,6 +135,7 @@ else{
         }
       
       <Button variant="outlined" color="error" onClick={resetForm}>Cancel</Button>
+      <Button variant="info" color="" onClick={()=>{console.log("ok");fun()}}>Close</Button>
      </Stack>
       </Grid>
     </Grid>

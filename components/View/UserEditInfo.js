@@ -26,7 +26,7 @@ const CustomInput = forwardRef((props, ref) => {
   return <TextField inputRef={ref} label='Birth Date' fullWidth {...props} />
 })
 
-const TabInfo = () => {
+const UserEditInfo = () => {
   // ** State
   const [date, setDate] = useState(null)
 
@@ -123,4 +123,4 @@ const TabInfo = () => {
   )
 }
 
-export default TabInfo
+export default UserEditInfo

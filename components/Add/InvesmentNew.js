@@ -4,7 +4,7 @@ import axios from 'axios';
 import {baseUrl} from '../../util/lib';
 
 export default function InvesmentNew(props) {
-  const {user_id,user_type}=props;
+  const {user_id,user_type,fun}=props;
   //Common States For All
   const [message, setMessage] = useState('This is a success alert — check it out!');
   const [alertShow, setAlertShow] = useState(false);
@@ -19,7 +19,7 @@ export default function InvesmentNew(props) {
 
   const [snominee, setSnominee] = useState('');
   const [account, setAccount] = useState('');
-  const [amount, setAmount] = useState('')
+  const [amount, setAmount] = useState()
   const [roi, setroi] = useState(3);
   const [is_send, setIs_send] = useState(false);
 
@@ -35,7 +35,6 @@ export default function InvesmentNew(props) {
     })
       .then((response)=> {
         setNominee(response.data);
-        console.log(response.data);
       }).catch((err)=>{
         console.log(err)
       });
@@ -47,7 +46,6 @@ export default function InvesmentNew(props) {
       })
         .then((response)=> {
           setAccounts(response.data);
-          console.log(response.data);
         }).catch((err)=>{
           console.log(err)
         });
@@ -96,10 +94,10 @@ export default function InvesmentNew(props) {
     headers: { "Content-Type": "multipart/form-data" },
   })
     .then((response)=> {
-      console.log(response.data.data.id)
       setAlertShow(true);
       setMessage("Invesment Successfull Please Wait for Verification!");
       setaAertColor('success');
+      fun();
       resetForm();
     })
     .catch((err)=> {
@@ -123,7 +121,7 @@ export default function InvesmentNew(props) {
  const resetForm=()=>{
   setSnominee('');
   setAccount('');
-  setAmount('');
+  setAmount(0);
   setIs_send(false);
  }
 
@@ -131,17 +129,17 @@ export default function InvesmentNew(props) {
 
   return (
       <Grid container sx={{'px':'5%','textAlign':'center!important','display':'block','my':'2%','fontFamily':'Playfair Display!important'}} >
-      <Typography align={'center'} variant={'h5'} sx={{'marginBottom':'5%'}}>Invesment</Typography>
+     
      <Box component='form' onSubmit={formHandler} >
      <Grid container spacing={2} direction="row">
-      <Grid item md={4} xs={12}>
-      <TextField label="Ammount"  type="number" required fullWidth  InputLabelProps={{ shrink: true}}  onChange={(e)=>{setAmount(e.target.value)}} />
+      <Grid item md={6} xs={12}>
+      <TextField label="Ammount"  type="number" required fullWidth  InputLabelProps={{ shrink: true}} value={amount} onChange={(e)=>{setAmount(e.target.value)}} />
       </Grid>
 
-      <Grid item md={4} xs={12}>
+      <Grid item md={6} xs={12}>
       <FormControl fullWidth>
         <InputLabel id="nominee">Nominee</InputLabel>
-        <Select label="Nominee"  labelId="nominee" onChange={(e)=>{setSnominee(e.target.value)}}>
+        <Select label="Nominee"  labelId="nominee" value={snominee} onChange={(e)=>{setSnominee(e.target.value)}}>
           {
             nominee.length<1?<MenuItem >Please Add Nominee</MenuItem>:
             nominee.map((item)=>{
@@ -152,10 +150,10 @@ export default function InvesmentNew(props) {
       </FormControl>
       </Grid >
 
-      <Grid item md={4} xs={12}>
+      <Grid item md={6} xs={12} sx={{marginTop:5}}>
       <FormControl fullWidth>
         <InputLabel id="nominee">Bank Account</InputLabel>
-        <Select label="Nominee"  labelId="nominee"  onChange={(e)=>{setAccount(e.target.value)}}>
+        <Select label="Nominee"  labelId="nominee"  value={account} onChange={(e)=>{setAccount(e.target.value)}}>
         {
             accounts.length<1?<MenuItem >Please Add Bank Account</MenuItem>:
             accounts.map((item)=>{
@@ -165,16 +163,16 @@ export default function InvesmentNew(props) {
         </Select>
       </FormControl>
       </Grid >
-      <Grid item md={4} xs={12}>
+      <Grid item md={6} xs={12}  sx={{marginTop:5}}>
       <TextField label="ROI"  type="text"  value={roi+' % '} fullWidth  InputLabelProps={{ shrink: true}}  disabled  />
       </Grid>
-      <Grid item md={4} xs={12}>
+      <Grid item md={6} xs={12}  sx={{marginTop:5}}>
       <FormGroup>
-      <FormControlLabel control={<Switch  checked={is_send}  onChange={(e)=>{setIs_send(!is_send)}}/>} label="Send Invesment Paper By Post" />
+      <FormControlLabel control={<Switch  checked={is_send}   onChange={(e)=>{setIs_send(!is_send)}}/>} label="Send Invesment Paper By Post" />
     </FormGroup>
       </Grid>
 
-      <Grid item md={4} xs={12} >
+      <Grid item md={6} xs={12}  sx={{marginTop:5}} >
       <Stack direction="row" spacing={4} sx={{'py':'3%','px':'4%'}}>
       <Button variant="outlined" type={'submit'} color="success">Save</Button>
       <Button variant="outlined" color="error" onClick={resetForm}>Cancel</Button>

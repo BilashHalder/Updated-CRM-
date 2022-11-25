@@ -7,7 +7,7 @@ import {baseUrl} from '../../util/lib'
 
 
 export default function NomineeNew(props) {
-  const {user_id,user_type}=props;
+  const {user_id,user_type,fun}=props;
 
 
   //Common States For All
@@ -64,6 +64,7 @@ export default function NomineeNew(props) {
       setMessage("Nominee Information Saved");
       setaAertColor('success');
       resetForm();
+      fun();
     })
     .catch((response)=> {
       setAlertShow(true);

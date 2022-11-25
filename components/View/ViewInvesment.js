@@ -1,102 +1,120 @@
-import {React,useState,useEffect} from 'react';
+import {React,useState,useEffect} from 'react'
+import {Grid,ButtonGroup,Button,Avatar,Drawer,Chip} from '@mui/material';
 import axios from 'axios';
-import Link from 'next/link'
 import {baseUrl,imageUrl} from '../../util/lib';
-import {Grid,Typography,TableContainer,Table,TableBody,TableRow,TableCell,Box,Button,Stack,Select,MenuItem,FormControl,InputLabel,Switch,FormControlLabel,TextField,Avatar,Divider,Alert,Snackbar,Paper,CircularProgress,Drawer} from '@mui/material';
+import exportFromJSON from 'export-from-json';
+const fileName = 'invesmentlist'
+const exportType =  exportFromJSON.types.csv;
 
-
-export default function ViewInvesment(props) {
-const {id,user_id,user_type,ammount,roi,nominee_id,account_no,payment_id,date_time, agreement_file,status,withdrw_req_time,is_send}=props.data;
-const [account, setAccount] = useState(null);
-const [nominee, setNominee] = useState(null);
-
-
-
-useEffect(() => {
-  axios({
-    method: "get",
-    url: `${baseUrl}/nominee/${nominee_id}`,
-    headers: { "Content-Type": "multipart/form-data" },
-  })
-    .then((response)=> {
-      console.log(response.data)
-      setNominee(response.data)
-    })
-    .catch((err)=> {
-     console.log(err);
-    });
-}, [])
+import DataTable from 'react-data-table-component';
+import EditInvesment from '../Edit/EditInvesment';
+import ViewInvesment from '../View/ViewInvesment';
 
 
 
+export default function AllInvesment(props) {
+
+  const data=props.data;
+    
+    const columns = [
+        {
+            name: 'Id',
+            selector: row => row.id,
+            sortable: true,
+        },
+        {
+            name: 'Amount',
+            selector: row => row.ammount,
+            sortable: true,
+        },
+        {
+            name: 'ROI',
+            selector: row => row.roi,
+            sortable: true,
+        },
+        {
+          name: 'Date & Time',
+          selector: row => row.date_time.replace('T',' ').replace('.000Z',''),
+          sortable: true,
+      },
+        {
+            name: 'Status',
+            selector: row =><Chip
+            label={row.status==0?"Pending":row.status==1?"Active":row.status==2?"Withdraw Request":"Close"}
+            color={row.status==0?"warning":row.status==1?"success":row.status==2?"info":"error"}
+            sx={{
+              height: 24,
+              fontSize: '0.75rem',
+              textTransform: 'capitalize',
+              '& .MuiChip-label': { fontWeight: 500 }
+            }}
+          /> ,
+            sortable: true,
+        },
+        {
+            name: 'Action',
+            selector: row =><ButtonGroup variant="text">
+            <Button  color="info" onClick={()=>{viewData(row)}}>View</Button>
+          </ButtonGroup>
+        },
+    ];
+
+   
+
+    const closeView=()=>{
+        setEditDrawer(false);
+    }
+
+    const closeEdit=()=>{
+        setViewDrawer(false);
+    }
+
+
+    const editData=(single)=>{
+        setItem(single)
+        setEditDrawer(true);
+    }
+
+    const viewData=(single)=>{
+        setItem(single)
+        setViewDrawer(true);
+    }
+
+    const [editDrawer, setEditDrawer] = useState(false);
+    const [viewDrawer, setViewDrawer] = useState(false);
+    const [flag, setFlag] = useState(null);
+    const [item, setItem] = useState(null);
+
+   
+    const tableData={
+        columns,
+        data,
+      }
   return (
-    <Box>
-      <Typography variant="h5" component="h5" sx={{'textAlign':'center','marginBottom':'2%'}} >Invesment Information </Typography>
-      <Grid container spacing={3}>
-
-      <Grid item md={6}>
-      <Typography variant="h6" component="h6" sx={{'textAlign':'center'}} >Invesment Details </Typography>
-      <Divider/>
-      <TableContainer>
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell>Invesment Id</TableCell> <TableCell>{id}</TableCell>
-            </TableRow>
-            <TableRow>
-            <TableCell>Ammount</TableCell> <TableCell>{ammount}</TableCell>
-            </TableRow>
-            <TableRow>
-            <TableCell>Invesment Date & Time</TableCell> <TableCell>{date_time.replace('T'," ").replace(".000Z","")}</TableCell>
-            </TableRow>
-            <TableRow>
-            <TableCell>Return </TableCell> <TableCell>{roi} % </TableCell>
-            </TableRow>
-            <TableRow>
-            <TableCell>Status </TableCell> <TableCell>{status==0?"Pending":status==1?"Active":status==2?"withdraw Requested":"Close"} </TableCell>
-            </TableRow>
-            <TableRow>
-            <TableCell>Send By Post </TableCell> <TableCell>{is_send==0?"No":"Yes"} </TableCell>
-            </TableRow>
-            {withdrw_req_time?<TableRow>
-            <TableCell>Withdrw Request Time </TableCell> <TableCell>{withdrw_req_time.replace('T'," ").replace(".000Z","")} </TableCell>
-            </TableRow>:<></>}
-
-          </TableBody>
-        </Table>
-      </TableContainer>
+    <Grid container sx={{'textAlign':'center!important','display':'block','my':'2%','fontFamily':'Playfair Display!important'}}>
   
-      </Grid>
+  <Button onClick={()=>{exportFromJSON({ data, fileName, exportType })}}>Download CSV</Button>
+   
+         <DataTable
+            columns={columns}
+            data={data}
+            pagination
+            responsive
+            fixedHeader={true}
+            fixedHeaderScrollHeight={'400px'}
+            title="All Invesment"
+            highlightOnHover={true}
 
-      <Grid item md={6}>
-      <Typography variant="h6" component="h6" sx={{'textAlign':'center','marginBottom':'2%'}} >Nominee & Bank Details </Typography>
-      <Divider/>
-      <TableContainer >
-        <Table>
-          {nominee?<TableBody>
-            <TableRow>
-              <TableCell>Nominee Name</TableCell> <TableCell>{nominee.name}</TableCell>
-            </TableRow>
-            <TableRow>
-            <TableCell>Date Of Birth</TableCell> <TableCell>{nominee.dob.slice(0,10)}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Bank Account No</TableCell> <TableCell>{account_no}</TableCell>
-            </TableRow>
-            <TableRow>
-            <TableCell>Status</TableCell> <TableCell>{is_send==0?"Not Active":"Active"} </TableCell>
-            </TableRow>
+        />
 
-          </TableBody>:<></>}
-          
-        </Table>
-      </TableContainer>
-     
-    <Box sx={{'m':"4%"}}>
-    <Button> <Link  style={{"textDecoration":"none"}}href="/invesment?id=4">View More Information</Link></Button>
-    </Box>
-      </Grid>
+        <Drawer anchor={'top'}open={editDrawer} onClose={closeView} >
+               <EditInvesment data={item} fun={setFlag}/> 
+         </Drawer>
+
+         <Drawer anchor={'top'}open={viewDrawer} onClose={closeEdit} >
+            <ViewInvesment data={item}/>
+         </Drawer>
+
     </Grid>
-    </Box>
   )
 }

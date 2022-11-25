@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, Fragment } from 'react'
+import { useState, Fragment,useEffect } from 'react'
 
 // ** Next Import
 import { useRouter} from 'next/router';
@@ -36,6 +36,15 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
 const UserDropdown = () => {
   // ** States
   const [anchorEl, setAnchorEl] = useState(null)
+
+  const [data, setData] = useState({});
+  const [role, setRole] = useState(null);
+useEffect(() => {
+  let data=JSON.parse(localStorage.getItem('crzn'));
+  setData(data.info);
+  setRole(data.role);
+
+}, [])
 
   // ** Hooks
   const router = useRouter()
@@ -75,10 +84,10 @@ const UserDropdown = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <Avatar
-          alt='John Doe'
+          alt={data.name}
           onClick={handleDropdownOpen}
           sx={{ width: 40, height: 40 }}
-          src='/images/avatars/1.png'
+          src={data.image?'http://localhost:9000/uploads/images/'+data.image:'/images/avatars/1.png'}
         />
       </Badge>
       <Menu
@@ -96,12 +105,12 @@ const UserDropdown = () => {
               badgeContent={<BadgeContentSpan />}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
-              <Avatar alt='John Doe' src='/images/avatars/1.png' sx={{ width: '2.5rem', height: '2.5rem' }} />
+              <Avatar alt={data.name} src={data.image?'http://localhost:9000/uploads/images/'+data.image:'/images/avatars/1.png'} sx={{ width: '2.5rem', height: '2.5rem' }} />
             </Badge>
             <Box sx={{ display: 'flex', marginLeft: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 600 }}>John Doe</Typography>
+              <Typography sx={{ fontWeight: 600 }}>{ data.name }</Typography>
               <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-                Admin
+               {role}
               </Typography>
             </Box>
           </Box>
