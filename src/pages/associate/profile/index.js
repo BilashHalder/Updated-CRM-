@@ -1,7 +1,7 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 
-import Box from '@mui/material/Box'
+import {Box,Card,TabList,TabPanel,} from '@mui/material'
 import Card from '@mui/material/Card'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
@@ -15,9 +15,9 @@ import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
 import InformationOutline from 'mdi-material-ui/InformationOutline'
 
 // ** Demo Tabs Imports
-import TabInfo from 'src/views/account-settings/TabInfo'
-import TabAccount from 'src/views/account-settings/TabAccount'
-import TabSecurity from 'src/views/account-settings/TabSecurity'
+import UserEditInfo from '../../../../components/View/UserEditInfo'
+import UserAccount from '../../../../components/View/UserAccount'
+import UserKyc from '../../../../components/View/UserKyc'
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
@@ -43,59 +43,68 @@ const TabName = styled('span')(({ theme }) => ({
 const AccountSettings = () => {
   // ** State
   const [value, setValue] = useState('account')
+  const [id, setid] = useState(null);
 
+  useEffect(() => {
+    setid(JSON.parse(localStorage.getItem('crzn')).id)
+  }, [])
+  
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
 
   return (
-    <Card>
-      <TabContext value={value}>
-        <TabList
-          onChange={handleChange}
-          aria-label='account-settings tabs'
-          sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
-        >
-          <Tab
-            value='account'
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <AccountOutline />
-                <TabName>Account</TabName>
-              </Box>
-            }
-          />
-          <Tab
-            value='security'
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <LockOpenOutline />
-                <TabName>KYC</TabName>
-              </Box>
-            }
-          />
-          <Tab
-            value='info'
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <InformationOutline />
-                <TabName>Info</TabName>
-              </Box>
-            }
-          />
-        </TabList>
+   <>
+   {
+    id? <Card>
+    <TabContext value={value}>
+      <TabList
+        onChange={handleChange}
+        aria-label='account-settings tabs'
+        sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
+      >
+        <Tab
+          value='account'
+          label={
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <AccountOutline />
+              <TabName>Account</TabName>
+            </Box>
+          }
+        />
+        <Tab
+          value='security'
+          label={
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <LockOpenOutline />
+              <TabName>KYC</TabName>
+            </Box>
+          }
+        />
+        <Tab
+          value='update'
+          label={
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <InformationOutline />
+              <TabName>Update</TabName>
+            </Box>
+          }
+        />
+      </TabList>
 
-        <TabPanel sx={{ p: 0 }} value='account'>
-          <TabAccount />
-        </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='security'>
-          <TabSecurity />
-        </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='info'>
-          <TabInfo />
-        </TabPanel>
-      </TabContext>
-    </Card>
+      <TabPanel sx={{ p: 0 }} value='account'>
+        <UserAccount user_id={1}/>
+      </TabPanel>
+      <TabPanel sx={{ p: 0 }} value='security'>
+        <UserKyc  user_id={1} user_type={1}/>
+      </TabPanel>
+      <TabPanel sx={{ p: 0 }} value='update'>
+        <UserEditInfo  user_id={1}/>
+      </TabPanel>
+    </TabContext>
+  </Card>:<></>
+   }
+   </>
   )
 }
 

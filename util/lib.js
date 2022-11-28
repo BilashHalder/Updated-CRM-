@@ -1,23 +1,15 @@
-const baseUrl='http://localhost:9000/api';
+const baseUrl='http://localhost:9000/api/';
 const imageUrl='http://localhost:9000/uploads/images';
 const docUrl='http://localhost:9000/uploads/documents';
-var stockData = [  
-    {
-        Symbol: "AAPL",
-        Company: "Apple Inc.",
-        Price: 132.54
-    },
-    {
-        Symbol: "INTC",
-        Company: "Intel Corporation",
-        Price: 33.45
-    },
-    {
-        Symbol: "GOOG",
-        Company: "Google Inc",
-        Price: 554.52
-    },
-];
+import { styled } from '@mui/material/styles';
+import {Paper} from '@mui/material'
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  }));
 
 
 const convertArrayOfObjectsToCSV=(args)=>{  
@@ -72,4 +64,4 @@ const downloadCSV = (args) =>{
     link.click();
 }
 
-module.exports={baseUrl,imageUrl,docUrl,downloadCSV}
+module.exports={baseUrl,imageUrl,docUrl,downloadCSV,Item}

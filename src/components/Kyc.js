@@ -11,30 +11,27 @@ import {Grid,Typography,CardContent,Box,Button,Stack,Select,MenuItem,FormControl
 
 import OutlinedInput from '@mui/material/OutlinedInput'
 
-
 import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
-
-
-const UserKyc = (props) => {
+const Kyc = (props) => {
  const {user_id,user_type}=props;
 
   useEffect(() => {
- 
-    let data = new FormData();
-    data.append('user_id',user_id);
-    data.append('user_type',user_type);
-    axios({
-      method: "post",
-      url: `http://localhost:9000/api/kyc/user`,
-      data: data,
-    })
-      .then((response)=> {
-        setinfo(response.data)
-      })
-      .catch((err)=> {
-       console.log(err);
+    if (localStorage) {
+      let info=JSON.parse(localStorage.getItem('crzn'));
+      let token=info.token;
+      let data = new FormData();
+      data.append('user_id',user_id);
+      data.append('user_type',user_type);
+      const instance = axios.create({
+        baseURL: 'http://localhost:9000/api/',
+        headers: {
+                    'Authorization': 'Bearer '+token,
+                    "Content-Type": "multipart/form-data"
+                 }
       });
-   
+      instance.post('kyc/user',data).then((res)=>setinfo(res.data)).catch((err)=>{console.log(err.response.data)});
+    
+    }
   }, [])
   
   // ** States
@@ -223,4 +220,4 @@ const resetForm=()=>{
   )
 }
 
-export default UserKyc
+export default Kyc

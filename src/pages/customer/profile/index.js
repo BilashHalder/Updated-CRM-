@@ -1,111 +1,114 @@
-// ** React Imports
-import { useState,useEffect } from 'react'
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Kyc from "src/components/Kyc";
+import ProfileInfo from "src/components/ProfileInfo";
+import EditInfo from "src/components/EditInfo";
+import axios from "axios";
 
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import TabList from '@mui/lab/TabList'
-import TabPanel from '@mui/lab/TabPanel'
-import TabContext from '@mui/lab/TabContext'
-import { styled } from '@mui/material/styles'
-import MuiTab from '@mui/material/Tab'
+import { styled } from "@mui/material/styles";
+import { Paper } from "@mui/material";
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
-// ** Icons Imports
-import AccountOutline from 'mdi-material-ui/AccountOutline'
-import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
-import InformationOutline from 'mdi-material-ui/InformationOutline'
-
-// ** Demo Tabs Imports
-import UserEditInfo from '../../../../components/View/UserEditInfo'
-import UserAccount from '../../../../components/View/UserAccount'
-import UserKyc from '../../../../components/View/UserKyc'
-
-// ** Third Party Styles Imports
-import 'react-datepicker/dist/react-datepicker.css'
-
-const Tab = styled(MuiTab)(({ theme }) => ({
-  [theme.breakpoints.down('md')]: {
-    minWidth: 100
-  },
-  [theme.breakpoints.down('sm')]: {
-    minWidth: 67
-  }
-}))
-
-const TabName = styled('span')(({ theme }) => ({
-  lineHeight: 1.71,
-  fontSize: '0.875rem',
-  marginLeft: theme.spacing(2.4),
-  [theme.breakpoints.down('md')]: {
-    display: 'none'
-  }
-}))
-
-const AccountSettings = () => {
-  // ** State
-  const [value, setValue] = useState('account')
-  const [id, setid] = useState(null);
-
-  useEffect(() => {
-    setid(JSON.parse(localStorage.getItem('crzn')).id)
-  }, [])
-  
-  const handleChange = (event, newValue) => {
-    setValue(newValue)
-  }
-
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
   return (
-   <>
-   {
-    id? <Card>
-    <TabContext value={value}>
-      <TabList
-        onChange={handleChange}
-        aria-label='account-settings tabs'
-        sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
-      >
-        <Tab
-          value='account'
-          label={
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <AccountOutline />
-              <TabName>Account</TabName>
-            </Box>
-          }
-        />
-        <Tab
-          value='security'
-          label={
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <LockOpenOutline />
-              <TabName>KYC</TabName>
-            </Box>
-          }
-        />
-        <Tab
-          value='update'
-          label={
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <InformationOutline />
-              <TabName>Update</TabName>
-            </Box>
-          }
-        />
-      </TabList>
-
-      <TabPanel sx={{ p: 0 }} value='account'>
-        <UserAccount user_id={1}/>
-      </TabPanel>
-      <TabPanel sx={{ p: 0 }} value='security'>
-        <UserKyc  user_id={1} user_type={1}/>
-      </TabPanel>
-      <TabPanel sx={{ p: 0 }} value='update'>
-        <UserEditInfo  user_id={1}/>
-      </TabPanel>
-    </TabContext>
-  </Card>:<></>
-   }
-   </>
-  )
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
 }
 
-export default AccountSettings
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
+export default function BasicTabs() {
+  const [value, setValue] = useState(0);
+  const [id, setId] = useState();
+  const [info, setInfo] = useState(null);
+  const [flag, setflag] = useState(0);
+
+  useEffect(() => {
+    if (localStorage) {
+      let info = JSON.parse(localStorage.getItem("crzn"));
+      let token = info.token;
+      let id = info.id;
+      setId(id);
+
+      const instance = axios.create({
+        baseURL: "http://localhost:9000/api/",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      instance
+        .get(`customer/${id}`)
+        .then((res) => setInfo(res.data))
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [flag]);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return (
+    <Item>
+      <Box sx={{ width: "100%" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+          >
+            <Tab label="Account" {...a11yProps(0)} />
+            <Tab label="Profile" {...a11yProps(1)} />
+            <Tab label="Edit Info" {...a11yProps(2)} />
+          </Tabs>
+        </Box>
+        <TabPanel value={value} index={0}>
+          {info ? <ProfileInfo data={info} /> : <></>}
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          {id ? <Kyc user_id={id} user_type={1} /> : <></>}
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          {info ? <EditInfo data={info} /> : <></>}
+        </TabPanel>
+      </Box>
+    </Item>
+  );
+}

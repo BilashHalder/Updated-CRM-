@@ -1,65 +1,50 @@
-import {React,useState,useEffect} from 'react';
-import {Grid,Box,Typography,Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow} from '@mui/material'
-import { styled } from '@mui/material/styles';
-import axios from 'axios';
-import PaymentNew from '../../../../components/Add/PaymentNew'
-import PaymentInfo from '../../../../components/View/PaymentInfo'
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Deposit from "src/components/Deposit";
+import DepositList from "src/components/DepositList";
+import DepositInfo from "src/components/DepositInfo";
 
 export default function index() {
-const [id, setid] = useState();
-const [info, setInfo] = useState(null);  
-useEffect(() => {
-
-
-
-
-
-
-  if(localStorage.getItem('crzn') &&  JSON.parse(localStorage.getItem('crzn')).id ){
-    let aid=JSON.parse(localStorage.getItem('crzn')).id;
-
-    setid(aid);
-
-    let data = new FormData();
-    data.append('user_id',id?id:JSON.parse(localStorage.getItem('crzn')).id);
-    data.append('user_type',2);
-    axios({
-      method: "get",
-      url: `http://localhost:9000/api/customer/${aid}`,
-      data: data,
-      headers: { "Content-Type": "multipart/form-data" },
-    })
-      .then((response)=> {
-        setInfo(response.data)
-      })
-      .catch((err)=> {
-       console.log(err);
+  const [deposits, setDeposits] = useState([]);
+  const [id, setId] = useState(null);
+  const [info, setinfo] = useState(null)
+  const [flag, setflag] = useState(0);
+  useEffect(() => {
+    if (localStorage) {
+      let info = JSON.parse(localStorage.getItem("crzn"));
+      setinfo(info);
+      let token = info.token;
+      let id = info.id;
+      setId(id);
+      let data = new FormData();
+      data.append("user_id", id);
+      data.append("user_type", 1);
+      const instance = axios.create({
+        baseURL: "http://localhost:9000/api/",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "multipart/form-data",
+        },
       });
-  }
-   
-
- else{
-  setid(null);
- }
-}, []);
+      instance
+        .post("deposit/user", data)
+        .then((res) => setDeposits(res.data))
+        .catch((err) => {
+          console.log(err.response.data);
+        });
+    }
+  }, [flag]);
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-    <Grid container spacing={2} sx={{marginTop:'3%'}}>
-      <Grid item xs={12} sm={12} md={12}>
-        <Item>
-        <PaymentInfo balance={info && info.balance?info.balance:0}/>
-        </Item>
-      </Grid>
-    </Grid>
-  </Box>
-  )
+    <div>
+      {
+        info?<DepositInfo info={info}/>:<></>
+      }
+      {
+        id?<Deposit user_id={id} user_type={1} fun={setflag} />:<></>
+      }
+      {deposits ? <DepositList data={deposits}/>: <></>}
+      
+    </div>
+  );
 }

@@ -1,7 +1,52 @@
-import React from 'react'
 
-export default function index() {
+import Grid from '@mui/material/Grid'
+
+
+import Poll from 'mdi-material-ui/Poll'
+import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
+import HelpCircleOutline from 'mdi-material-ui/HelpCircleOutline'
+import BriefcaseVariantOutline from 'mdi-material-ui/BriefcaseVariantOutline'
+
+import CardStatisticsVerticalComponent from 'src/@core/components/card-statistics/card-stats-vertical'
+
+import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
+
+// ** Demo Components Imports
+import Table from 'src/views/dashboard/Table'
+import Trophy from 'src/views/dashboard/Trophy'
+import TotalEarning from 'src/views/dashboard/TotalEarning'
+import StatisticsCard from 'src/views/dashboard/StatisticsCard'
+import WeeklyOverview from 'src/views/dashboard/WeeklyOverview'
+import DepositWithdraw from 'src/views/dashboard/DepositWithdraw'
+import SalesByCountries from 'src/views/dashboard/SalesByCountries'
+
+
+
+
+
+const Dashboard = () => {
   return (
-    <div>Dashboard emp</div>
+    <ApexChartWrapper>
+      <Grid container spacing={6}>
+        <Grid item xs={12} md={4}>
+          <Trophy  title={"Hi,Customer"} sub_title={"Thank You Chosing Us"} price={420000} />
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <StatisticsCard />
+        </Grid>
+        <Grid item xs={12} md={12} lg={12}>
+          <WeeklyOverview />
+        </Grid>
+
+        <Grid item xs={12} md={12} lg={812}>
+          <DepositWithdraw user_id={1} user_type={1}/>
+        </Grid>
+        <Grid item xs={12}>
+          <Table user_id={1} user_type={1}/>
+        </Grid>
+      </Grid>
+    </ApexChartWrapper>
   )
 }
+
+export default Dashboard

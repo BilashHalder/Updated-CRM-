@@ -1,13 +1,14 @@
 import {React,useState} from 'react'
 import {Grid,Typography,Box,Button,Stack,Select,MenuItem,FormControl,InputLabel,Switch,FormControlLabel,TextField,Avatar,Divider,Alert,Snackbar,Paper,CircularProgress,Drawer} from '@mui/material';
 import axios from 'axios';
-import {baseUrl} from '../../util/lib';
+import {baseUrl,Item} from '../../util/lib';
 
 
 
-export default function PaymentNew(props) {
+export default function Deposit(props) {
   const {user_id,user_type,fun}=props;
-  //Common States For All
+
+
   const [message, setMessage] = useState('This is a success alert — check it out!');
   const [alertShow, setAlertShow] = useState(false);
   const [alertColor, setaAertColor] = useState('error');
@@ -55,13 +56,19 @@ else{
   else{
     data.append('reference',tid); 
   }
+  let info=JSON.parse(localStorage.getItem('crzn'));
+  let token=info.token;
 
-  axios({
-    method: "post",
-    url: `${baseUrl}/deposit`,
-    data: data,
-    headers: { "Content-Type": "multipart/form-data" },
-  })
+  const instance = axios.create({
+    baseURL: 'http://localhost:9000/api/',
+    headers: {
+                'Authorization': 'Bearer '+token,
+                "Content-Type": "multipart/form-data"
+             }
+  });
+
+
+  instance.post('deposit',data)
     .then((response)=> {
       setAlertShow(true);
       setMessage("Transaction Request Saved");
@@ -80,14 +87,6 @@ else{
     });
 }
 
-
-
-
-
-
-
-
-
  }
  const resetForm=()=>{
  settid();
@@ -96,8 +95,9 @@ else{
  setImg('');
  }
   return (
-      <Grid container sx={{'px':'5%','textAlign':'center!important','display':'block','my':'2%','fontFamily':'Playfair Display!important'}} >
-      <Typography align={'center'} variant={'h5'} sx={{'marginBottom':'5%'}}>Add Payment Details</Typography>
+      <Grid container sx={{'textAlign':'center!important','display':'block','my':'4%','fontFamily':'Playfair Display!important'}} >
+     <Item sx={{'px':'5%',py:4}}>
+     <Typography align={'center'} variant={'h5'} sx={{'marginBottom':'5%'}}>Add Payment Details</Typography>
      <Box component='form' onSubmit={formHandler} >
      <Grid container spacing={2} direction="row">
       <Grid item md={4} xs={12}>
@@ -143,6 +143,7 @@ else{
       <Alert severity={alertColor}>{message}</Alert>
       </Snackbar>
 
+     </Item>
     </Grid>
   )
 }
