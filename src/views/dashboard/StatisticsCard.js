@@ -17,19 +17,19 @@ import AccountOutline from 'mdi-material-ui/AccountOutline'
 
 const salesData = [
   {
-    stats: '₹ 24500',
+    stats: '₹ 24500.00',
     title: 'Invesment',
     color: 'primary',
     icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
   },
   {
-    stats: '12',
-    title: 'Customers',
+    stats: '0',
+    title: 'Referral Customer',
     color: 'success',
     icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
   },
   {
-    stats: '₹ 5000',
+    stats: '₹ 00.00',
     color: 'warning',
     title: 'Profit',
     icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
@@ -37,20 +37,11 @@ const salesData = [
 ]
 
 const renderStats = () => {
+
   return salesData.map((item, index) => (
     <Grid item xs={12} sm={4} key={index}>
       <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar
-          variant='rounded'
-          sx={{
-            mr: 3,
-            width: 44,
-            height: 44,
-            boxShadow: 3,
-            color: 'common.white',
-            backgroundColor: `${item.color}.main`
-          }}
-        >
+        <Avatar variant='rounded'  sx={{ mr: 3,  width: 44,   height: 44,boxShadow: 3,color: 'common.white',backgroundColor: `${item.color}.main`}} >
           {item.icon}
         </Avatar>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -62,7 +53,8 @@ const renderStats = () => {
   ))
 }
 
-const StatisticsCard = () => {
+const StatisticsCard = (props) => {
+  const {invest_total}=props;
   return (
     <Card>
       <CardHeader

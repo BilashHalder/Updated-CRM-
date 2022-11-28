@@ -3,11 +3,11 @@ import Login from 'mdi-material-ui/Login'
 import Table from 'mdi-material-ui/Table'
 import {CubeOutline,HomeOutline,CurrencyInr,AccountGroup,AccountCashOutline,AccountChild,BookOpen,BriefcaseOutline,CashFast,BankTransfer} from 'mdi-material-ui'
 import Router from 'next/router';
-
+import Diversity1Icon from '@mui/icons-material/Diversity1';
 import { useEffect,useState } from "react";
-
-
-
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 
 const Adminnavigation = () => {
   const [role, setRole] = useState(null);
@@ -115,6 +115,11 @@ else{
       title: 'Payment',
       icon: CurrencyInr,
       path: '/customer/payments'
+    },
+    {
+      title: 'Referral',
+      icon: Diversity1Icon,
+      path: '/customer/referral'
     }
   ]
 
@@ -170,18 +175,23 @@ else{
     },
     {
       title: 'My Information',
-      icon: AccountGroup,
+      icon: PermIdentityIcon,
       path: '/employee/info'
     },
     {
-      title: 'Bank Accounts',
-      path: '/employee/bank',
-      icon: AccountCashOutline
+      title: 'Profile',
+      path: '/employee/profile',
+      icon: ManageAccountsIcon
     },
     {
       title: 'Salary History',
       icon: BookOpen,
       path: '/employee/salary'
+    },
+    {
+      title: 'Leave',
+      icon: HolidayVillageIcon,
+      path: '/employee/leave'
     }
   ]
   if(role=='admin')

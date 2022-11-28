@@ -53,8 +53,8 @@ export default function index() {
       <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Approve Work Reports" {...a11yProps(0)} />
-          <Tab label="Submit Work Reports" {...a11yProps(1)} />
+          <Tab label="History" {...a11yProps(0)} />
+          <Tab label="Apply Leave" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>

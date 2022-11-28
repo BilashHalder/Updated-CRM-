@@ -1,86 +1,42 @@
-import {React,useState,useEffect} from 'react';
-import {Grid,Box,Typography,Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow} from '@mui/material'
-import { styled } from '@mui/material/styles';
+import React,{useEffect,useState} from 'react'
 import axios from 'axios';
-import  AccountNew  from '../../../../components/Add/AccountNew';
+import BankAccounts from 'src/components/BankAccounts';
+import BankAccountNew from 'src/components/BackAccountNew';
+export default function index() { 
+  const [accounts, setAccounts] = useState([]);
+  const [id, setId] = useState(null);
+  const [flag, setflag] = useState(0);
 
+  useEffect(() => {
+    if (localStorage) {
+      let info=JSON.parse(localStorage.getItem('crzn'));
+      let token=info.token;
+      let id=info.id;
+      setId(id);
+      let data=new FormData();
+      data.append('user_id',id);
+      data.append('user_type',2);
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
-
-export default function index() {
-const [id, setid] = useState();
-const [bank, setBank] = useState([]);  
-useEffect(() => {
-  if(localStorage.getItem('crzn') &&  JSON.parse(localStorage.getItem('crzn')).id ){
-    setid(JSON.parse(localStorage.getItem('crzn')).id);
-    let data = new FormData();
-    data.append('user_id',id?id:JSON.parse(localStorage.getItem('crzn')).id);
-    data.append('user_type',2);
-    axios({
-      method: "post",
-      url: `http://localhost:9000/api/account/user`,
-      data: data,
-      headers: { "Content-Type": "multipart/form-data" },
-    })
-      .then((response)=> {
-        setBank(response.data)
-      })
-      .catch((err)=> {
-       console.log(err);
+      const instance = axios.create({
+        baseURL: 'http://localhost:9000/api/',
+        headers: {
+                    'Authorization': 'Bearer '+token,
+                    "Content-Type": "multipart/form-data"
+                 }
       });
-  }
+  
+  instance.post('account/user',data).then((res)=>setAccounts(res.data)).catch((err)=>{console.log(err.response.data)});
+
+    }
    
-
- else{
-  setid(null);
- }
-}, []);
-
+  }, [flag])
+  
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Typography variant="h5" component="h5" sx={{textAlign:'center'}}> My Bank Account Information</Typography>
-    <Grid container spacing={2} sx={{marginTop:'3%'}}>
-      <Grid item xs={12} sm={12} md={12}>
-        <Item>
-        {bank?<>
-          <TableContainer component={Paper}>
-      <Table aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Account No</TableCell>
-            <TableCell align="right">IFSC COde</TableCell>
-            <TableCell align="right">Bank Name</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {bank.map((row) => (
-            <TableRow
-              key={row.account_no}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {row.account_no}
-              </TableCell>
-              <TableCell align="right">{row.ifsc_code}</TableCell>
-              <TableCell align="right">{row.bank}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-
-        
-        </>:<Typography variant="h6" component="h6" sx={{textAlign:'center'}}> Sorry No Bank Account !</Typography>}
-        </Item>
-      </Grid>
-    
-    </Grid>
-  </Box>
+    <div>{
+      accounts?<BankAccounts data={accounts}/>:<></>
+    }
+    {
+      accounts.length<3?<BankAccountNew user_id={id?id:null} user_type={2} fun={setflag}/>:<></>
+    }</div>
   )
 }

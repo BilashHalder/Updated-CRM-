@@ -3,9 +3,9 @@ import {Grid,Typography,Box,Button,Stack,Select,MenuItem,FormControl,InputLabel,
 import axios from 'axios';
 import {baseUrl} from '../../util/lib';
 
-export default function PaymentNew(props) {
+export default function Payment(props) {
   const {user_id,user_type,fun}=props;
-  //Common States For All
+
   const [message, setMessage] = useState('This is a success alert — check it out!');
   const [alertShow, setAlertShow] = useState(false);
   const [alertColor, setaAertColor] = useState('error');
@@ -53,18 +53,22 @@ else{
   else{
     data.append('reference',tid); 
   }
+  let info=JSON.parse(localStorage.getItem('crzn'));
+  let token=info.token;
 
-  axios({
-    method: "post",
-    url: `${baseUrl}/deposit`,
-    data: data,
-    headers: { "Content-Type": "multipart/form-data" },
-  })
-    .then((response)=> {
+  const instance = axios.create({
+    baseURL: 'http://localhost:9000/api/',
+    headers: {
+                'Authorization': 'Bearer '+token,
+                "Content-Type": "multipart/form-data"
+             }
+  });
+
+  instance.post('deposit',data).then((response)=> {
       setAlertShow(true);
       setMessage("Transaction Request Saved");
       setaAertColor('success');
-      fun();
+      fun(Math.random());
       resetForm();
     })
     .catch((response)=> {
@@ -77,14 +81,6 @@ else{
     
     });
 }
-
-
-
-
-
-
-
-
 
  }
  const resetForm=()=>{

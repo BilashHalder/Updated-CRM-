@@ -10,11 +10,12 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Chip from '@mui/material/Chip'
 import { React, useState,useEffect } from "react";
-import {docUrl} from '../../util/lib'
+
 // ** Demo Components Imports
 
 import CardMembership from 'src/views/cards/CardMembership'
 import InvesmentPayouts from './InvesmentPayouts';
+import InvesmentButtons from './InvesmentButtons';
 
 
 const InvesmentView = (props) => {
@@ -72,12 +73,12 @@ const [nominee, setNominee] = useState();
           </TableRow>:<></>
             }
             
-
-           {
+{/* 
+            {
             agreement_file? <TableRow  sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
-            <TableCell component="th" scope="row"><Button href={`${docUrl}/${agreement_file}`} target="_blank" color='primary' variant='outlined'>Download Agreement</Button> </TableCell>
+            <TableCell component="th" scope="row"></TableCell>
           </TableRow>:<></>
-           }
+           } */}
 
         </TableBody>
       </Table>
@@ -85,7 +86,8 @@ const [nominee, setNominee] = useState();
       </Grid>
 
       <Grid item xs={12} md={8}>
-       <InvesmentPayouts id={id}/>
+       <InvesmentPayouts id={id}  />
+       <InvesmentButtons status={status} agreement={agreement_file} id={id}/>
       </Grid>
     </Grid>
   )

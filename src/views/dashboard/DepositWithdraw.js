@@ -6,9 +6,6 @@ import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import MuiDivider from '@mui/material/Divider'
-import axios from 'axios';
-
-import {useState,useEffect} from 'react'
 
 
 // Styled Divider component
@@ -23,26 +20,8 @@ const Divider = styled(MuiDivider)(({ theme }) => ({
 }))
 
 const DepositWithdraw = (props) => {
-  const {user_id,user_type}=props;
-
-  const [transaction, setTransaction] = useState([]);
-  useEffect(() => {
-    axios({
-      method: "post",
-      url: `http://localhost:9000/api/payment/user`,
-      data: {user_id,user_type},
-    })
-      .then((response)=> {
-        setTransaction(response.data)
-      })
-      .catch((err)=> {
-       console.log(err);
-      });
-  }, [])
-  
-
-
-
+  const {transaction}=props;
+console.log(transaction)
   return (
     <Card sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: ['column', 'column', 'row'] }}>
       <Box sx={{ width: '100%' }}>

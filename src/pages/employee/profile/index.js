@@ -51,7 +51,7 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs() {
+export default function index() {
   const [value, setValue] = useState(0);
   const [id, setId] = useState();
   const [info, setInfo] = useState(null);
