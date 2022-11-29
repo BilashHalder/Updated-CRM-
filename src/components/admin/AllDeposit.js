@@ -1,19 +1,18 @@
-import {React,useState,useEffect, use} from 'react'
-import {Grid,ButtonGroup,Button,Avatar,Drawer} from '@mui/material';
-import axios from 'axios';
-import {baseUrl,imageUrl} from '../../util/lib';
+import {React,useState,useEffect} from 'react'
+import {Grid,ButtonGroup,Button,Drawer,Chip} from '@mui/material';
+
+
 import exportFromJSON from 'export-from-json';
 const fileName = 'associateList'
 const exportType =  exportFromJSON.types.csv;
 
 import DataTable from 'react-data-table-component';
-import EditAssociate from '../Edit/EditAssociate';
-import ViewAssociate from '../View/ViewAssociate';
+import DepositInfo from './DepositInfo';
 
 
 
-export default function AllAssociate(props) {
-    const {data,fun}=props
+export default function AllDeposit(props) {
+    const {data,fun}=props;
     const columns = [
         {
             name: 'Id',
@@ -21,29 +20,27 @@ export default function AllAssociate(props) {
             sortable: true,
         },
         {
-            name: 'Name',
-            selector: row => <span><Avatar alt={row.name} src={`${imageUrl}/${row.image}`} /> {row.name}</span>,
+            name: 'Amount',
+            selector: row => row.amount,
         },
         {
-            name: 'Phone No',
-            selector: row => row.phone,
+            name: 'Date & Time',
+            selector: row => row.date_time.replace('T',' ').replace('.000Z',''),
             sortable: true,
         },
         {
-            name: 'Email',
-            selector: row => row.email,
+            name: 'Payment Type',
+            selector: row =><span>{row.mode==1?"Bank Deposit":row.mode==2?"UPI/IMPS":"Others"}</span> ,
             sortable: true,
         },
         {
             name: 'Status',
-            selector: row =><span>{row.status==0? "Not Active" :row.status==1? "Active":"Others"}</span> ,
-            sortable: true,
+            selector: row => <Chip label={row.status==0?"Pending":row.status==1?"Sucessfull":"Rejected"} color={row.status==0?"primary":row.status==1?"success":"error"} size={'small'}></Chip>,
         },
         {
             name: 'Action',
             selector: row =><ButtonGroup variant="text">
             <Button  color="info" onClick={()=>{viewData(row)}}>View</Button>
-            <Button color="warning" onClick={()=>{editData(row)}}>Edit</Button>
           </ButtonGroup>
         },
     ];
@@ -58,19 +55,13 @@ export default function AllAssociate(props) {
         setViewDrawer(false);
     }
 
-
-    const editData=(single)=>{
-        setEditDrawer(true);
-    }
-
     const viewData=(single)=>{
         setViewDrawer(true);
+        setTemp(single);
     }
 
-
-    const [editDrawer, setEditDrawer] = useState(false);
     const [viewDrawer, setViewDrawer] = useState(false);
-
+    const [temp, setTemp] = useState(null);
     const tableData={
         columns,
         data,
@@ -87,17 +78,15 @@ export default function AllAssociate(props) {
             responsive
             fixedHeader={true}
             fixedHeaderScrollHeight={'400px'}
-            title="All Associate"
+            title="All Deposit List"
             highlightOnHover={true}
 
         />
 
-        <Drawer anchor={'top'}open={editDrawer} onClose={closeView} >
-                <EditAssociate/>
-         </Drawer>
-
-         <Drawer anchor={'top'}open={viewDrawer} onClose={closeEdit} >
-            <ViewAssociate/>
+        <Drawer anchor={'top'}open={viewDrawer} onClose={closeEdit} >
+            {
+                temp?<DepositInfo fun={fun} data={temp?temp:null}/>:<>Invalid Request</>
+            }
          </Drawer>
 
     </Grid>

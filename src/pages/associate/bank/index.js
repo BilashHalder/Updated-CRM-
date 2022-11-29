@@ -1,7 +1,7 @@
 import React,{useEffect,useState} from 'react'
 import axios from 'axios';
 import BankAccounts from 'src/components/BankAccounts';
-import BankAccountNew from 'src/components/BackAccountNew';
+import BankAccountNew from 'src/components/BankAccountNew';
 export default function index() { 
   const [accounts, setAccounts] = useState([]);
   const [id, setId] = useState(null);

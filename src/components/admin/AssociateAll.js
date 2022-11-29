@@ -1,18 +1,16 @@
 import {React,useState,useEffect, use} from 'react'
 import {Grid,ButtonGroup,Button,Avatar,Drawer} from '@mui/material';
-import axios from 'axios';
-import {baseUrl,imageUrl} from '../../util/lib';
+import {baseUrl,imageUrl} from '../../../util/lib';
 import exportFromJSON from 'export-from-json';
 const fileName = 'associateList'
 const exportType =  exportFromJSON.types.csv;
 
 import DataTable from 'react-data-table-component';
-import EditAssociate from '../Edit/EditAssociate';
-import ViewAssociate from '../View/ViewAssociate';
 
 
 
-export default function AllAssociate(props) {
+
+export default function AssociateAll(props) {
     const {data,fun}=props
     const columns = [
         {
@@ -93,11 +91,11 @@ export default function AllAssociate(props) {
         />
 
         <Drawer anchor={'top'}open={editDrawer} onClose={closeView} >
-                <EditAssociate/>
+                {/* <EditAssociate/> */}
          </Drawer>
 
          <Drawer anchor={'top'}open={viewDrawer} onClose={closeEdit} >
-            <ViewAssociate/>
+            {/* <ViewAssociate/> */}
          </Drawer>
 
     </Grid>

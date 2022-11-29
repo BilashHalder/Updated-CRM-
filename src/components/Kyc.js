@@ -13,7 +13,7 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 
 import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
 const Kyc = (props) => {
- const {user_id,user_type}=props;
+ const {user_id,user_type,fun}=props;
 
   useEffect(() => {
     if (localStorage) {
@@ -29,7 +29,7 @@ const Kyc = (props) => {
                     "Content-Type": "multipart/form-data"
                  }
       });
-      instance.post('kyc/user',data).then((res)=>setinfo(res.data)).catch((err)=>{console.log(err.response.data)});
+      instance.post('kyc/user',data).then((res)=>{setinfo(res.data);fun(Math.random())}).catch((err)=>{console.log(err.response.data)});
     
     }
   }, [])
@@ -78,24 +78,27 @@ else{
   data.append('adhar_no',adhar);
   data.append('pan_no',pan);
   data.append('address',address);
-  
-  axios({
-    method: "post",
-    url: `http://localhost:9000/api/kyc`,
-    data: data,
-  })
-    .then((response)=> {
-      console.log(response.data)
+  let info=JSON.parse(localStorage.getItem('crzn'));
+      let token=info.token;
+      const instance = axios.create({
+        baseURL: 'http://localhost:9000/api/',
+        headers: {
+                    'Authorization': 'Bearer '+token,
+                    "Content-Type": "multipart/form-data"
+                 }
+      });
+    instance.post('kyc',data).then((response)=> {
+  setAlertShow(true);
+  setMessage('Your Kyc Information Saved!');
+  setaAertColor('success'); 
+  resetForm();
     })
     .catch((err)=> {
      console.log(err);
     });
 
 
-  setAlertShow(true);
-  setMessage('Your Kyc Information Updated!');
-  setaAertColor('success'); 
-  resetForm();
+ 
 }
 
 }

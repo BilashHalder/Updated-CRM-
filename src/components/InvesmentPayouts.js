@@ -36,7 +36,7 @@ export default function InvesmentPayouts(props) {
     data.length>0?<TableContainer component={Paper}>
       <Typography sx={{textAlign:'center'}}>Payout History</Typography>
       <Divider/>
-    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <Table  aria-label="simple table">
       <TableHead>
         <TableRow>
           <TableCell>Transaction Id</TableCell>

@@ -5,8 +5,9 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import {Item} from '../../../../util/lib'
-import LeaveHistory from 'src/components/LeaveHistory';
-import LeaveApply from 'src/components/LeaveApply';
+import EmployeeInfo from 'src/components/EmployeeInfo';
+import Qualification from 'src/components/Qualification';
+import EmployeeOthers from 'src/components/EmployeeOthers';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -55,13 +56,17 @@ export default function index() {
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Information" {...a11yProps(0)} />
           <Tab label="Qualification" {...a11yProps(1)} />
+          <Tab label="Others" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-       <LeaveHistory/>
+      <EmployeeInfo/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <LeaveApply/>
+       <Qualification/>
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+       <EmployeeOthers/>
       </TabPanel>
     </Box>
     </Item>

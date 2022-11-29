@@ -5,8 +5,8 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import {Item} from '../../../../util/lib'
-import LeaveHistory from 'src/components/LeaveHistory';
-import LeaveApply from 'src/components/LeaveApply';
+import ApproveReport from 'src/components/ApproveReport';
+import Report from 'src/components/Report';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -58,10 +58,10 @@ export default function index() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-       <LeaveHistory/>
+      <ApproveReport data={[]}/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <LeaveApply/>
+       <Report/>
       </TabPanel>
     </Box>
     </Item>
