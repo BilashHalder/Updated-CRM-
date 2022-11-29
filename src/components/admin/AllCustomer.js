@@ -1,19 +1,17 @@
-import {React,useState,useEffect, use} from 'react'
-import {Grid,ButtonGroup,Button,Avatar,Drawer} from '@mui/material';
-import {baseUrl,imageUrl} from '../../../util/lib';
-import router from 'next/router';
+import {React,useState} from 'react'
+import {Grid,ButtonGroup,Button,Avatar,Drawer,Stack,Typography} from '@mui/material';
 import exportFromJSON from 'export-from-json';
-const fileName = 'associateList'
+import {imageUrl} from '../../../util/lib';
+const fileName = 'customerList'
 const exportType =  exportFromJSON.types.csv;
 
 import DataTable from 'react-data-table-component';
-import EditAssociate from './EditAssociate';
 
 
 
 
-export default function AssociateAll(props) {
-    const {data,fun}=props
+export default function AllCustomer(props) {
+    const {data}=props;
     const columns = [
         {
             name: 'Id',
@@ -22,7 +20,7 @@ export default function AssociateAll(props) {
         },
         {
             name: 'Name',
-            selector: row => <span><Avatar alt={row.name} src={`${imageUrl}/${row.image}`} /> {row.name}</span>,
+            selector: row =><Stack direction="row" spacing={4} ><Avatar alt={row.name} src={`${imageUrl}/${row.image}`} /> <Typography>{row.name}</Typography></Stack>,
         },
         {
             name: 'Phone No',
@@ -42,35 +40,33 @@ export default function AssociateAll(props) {
         {
             name: 'Action',
             selector: row =><ButtonGroup variant="text">
-            <Button  color="info" onClick={()=>{
-                router.push({
-                    pathname: '/admin/associate/info',
-                    query:{id:row.id}
-                  })
-            }}>View</Button>
+            <Button  color="info" onClick={()=>{viewData(row)}}>View</Button>
             <Button color="warning" onClick={()=>{editData(row)}}>Edit</Button>
           </ButtonGroup>
         },
     ];
 
+   
 
+    const closeView=()=>{
+        setEditDrawer(false);
+    }
 
     const closeEdit=()=>{
-        setEditDrawer(false);
+        setViewDrawer(false);
     }
 
 
     const editData=(single)=>{
-        setviewData(single)
         setEditDrawer(true);
-       
     }
 
-  
+    const viewData=(single)=>{
+        setViewDrawer(true);
+    }
 
     const [editDrawer, setEditDrawer] = useState(false);
-    const [viewData, setviewData] = useState(null);
-
+    const [viewDrawer, setViewDrawer] = useState(false);
 
     const tableData={
         columns,
@@ -88,16 +84,17 @@ export default function AssociateAll(props) {
             responsive
             fixedHeader={true}
             fixedHeaderScrollHeight={'400px'}
-            title="All Associate"
+            title="All Customer"
             highlightOnHover={true}
 
         />
 
-        <Drawer anchor={'top'}open={editDrawer} onClose={closeEdit} >
-            {
-                viewData? <EditAssociate data={viewData} fun={fun}/>:<></>
-            }
-             
+        <Drawer anchor={'top'}open={editDrawer} onClose={closeView} >
+                Edit
+         </Drawer>
+
+         <Drawer anchor={'top'}open={viewDrawer} onClose={closeEdit} >
+           View
          </Drawer>
 
     </Grid>

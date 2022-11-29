@@ -1,8 +1,8 @@
 import {React,useState,useEffect} from 'react'
 import {Grid,Typography,Box,Button,Stack,Select,MenuItem,FormControl,InputLabel,Switch,FormControlLabel,TextField,Avatar,Divider,Alert,Snackbar,Paper,CircularProgress,Drawer} from '@mui/material';
 import axios from 'axios';
-export default function CustomerNew(props) {
-const {fun}=props;
+export default function EditAssociate(props) {
+const {data,fun}=props;
   useEffect(() => {
     
   if (localStorage) {
@@ -28,15 +28,16 @@ const {fun}=props;
 
   const [allemp, setAllemp] = useState([])
 
-const [name, setName] = useState('');
-const [phone, setPhone] = useState('');
-const [email, setEmail] = useState('');
-const [gender, setGender] = useState('');
-const [commission, setCommission] = useState('');
-const [img, setImg] = useState(null);
-const [emp_id, setEmp_id] = useState(0);
-
-
+const [name, setName] = useState(data.name);
+const [phone, setPhone] = useState(data.phone);
+const [email, setEmail] = useState(data.email);
+const [gender, setGender] = useState(data.gender);
+const [commission, setCommission] = useState(data.commission_rate);
+const [img, setImg] = useState(data.image);
+const [emp_id, setEmp_id] = useState(data.employee_id);
+const [status, setStatus] = useState(data.status?true:false);
+const [ref_key, setRef_key] = useState(data.referral_key);
+const [asid, setId] = useState(data.id);
 
 
 //Common Functions For All
@@ -96,7 +97,9 @@ else{
   data.append('commission_rate',commission);
   data.append('employee_id',emp_id);
   data.append('phone',phone);
-  data.append('image',img);
+  data.append('status',status?1:0);
+  data.append('referral_key',ref_key);
+//   data.append('image',img);
 
   let token=JSON.parse(localStorage.getItem('crzn')).token;
 
@@ -110,15 +113,16 @@ else{
 
 
 
-  instance.post('associate',data)
+  instance.put('associate/'+asid,data)
     .then((response)=> {
       setAlertShow(true);
-      setMessage("Associate Information Saved");
+      setMessage("Associate Information Updated");
       setaAertColor('success');
-      fun(Math.random())
+        fun(Math.random())
       resetForm();
     })
     .catch((err)=> {
+    console.log(err)
      if(err.response && err.response.data && err.response.data.message)
      setMessage(err.response.data.message);
      else
@@ -138,6 +142,8 @@ else{
   setGender('');
   setEmp_id('');
   setCommission('');
+  setEmp_id('');
+  setRef_key('')
   setImg(null);
 
  }
@@ -146,7 +152,7 @@ else{
 
   return (
       <Grid container sx={{'px':'5%','textAlign':'center!important','display':'block','my':'2%','fontFamily':'Playfair Display!important'}} >
-      <Typography align={'center'} variant={'h6'} sx={{'marginBottom':'2%'}}>Add New Associate</Typography>
+      <Typography align={'center'} variant={'h6'} sx={{'marginBottom':'2%'}}>Update Associate Information</Typography>
      <Box component='form' onSubmit={formHandler} >
      <Grid container spacing={2} direction="row">
       <Grid item md={4} xs={12}>
@@ -155,13 +161,13 @@ else{
       }}  />
       </Grid>
       <Grid item md={4} xs={12}>
-      <TextField label="Email Id"  type="email" required fullWidth  InputLabelProps={{ shrink: true}} value={email} onChange={(e)=>{
+      <TextField label="Email Id"  type="email" required fullWidth disabled  InputLabelProps={{ shrink: true}} value={email} onChange={(e)=>{
         setEmail(e.target.value);
       }}  />
       </Grid>
 
       <Grid item md={4} xs={12}>
-      <TextField label="Phone No"  type="number" required fullWidth  InputLabelProps={{ shrink: true}}  value={phone} onChange={(e)=>{
+      <TextField label="Phone No"  type="number" required fullWidth disabled InputLabelProps={{ shrink: true}}  value={phone} onChange={(e)=>{
         setPhone(e.target.value);
       }} />
       </Grid>
@@ -212,15 +218,31 @@ else{
       }} />
 </Button>
       </Grid>
+      <Grid item md={1} xs={6} my={5}>
+      <FormControlLabel
+        control={<Switch size="small" checked={status} onChange={(e)=>{
+            setStatus(!status);
+        }}  />}
+        label="Status"
+      />
+      
+      </Grid>
+      <Grid item md={3} xs={6} my={5}>
+      <TextField label="Referral Key"  type="text" required fullWidth  InputLabelProps={{ shrink: true}}  value={ref_key} onChange={(e)=>{
+        setRef_key(e.target.value);
+      }} />
+      
+      </Grid>
+
 
       <Grid item md={4} xs={12} >
       <Stack direction="row" spacing={4} sx={{'py':'3%','px':'4%'}}>
-      <Button variant="outlined" type={'submit'} color="success">Save</Button>
+      <Button variant="outlined" type={'submit'} color="success">Update</Button>
       <Button variant="outlined" color="error" onClick={resetForm}>Cancel</Button>
      </Stack>
       </Grid>
       <Grid item md={4} xs={6} >
-           {img?<img src={URL.createObjectURL(img)} height={100} width={100}></img>:<></>}
+           {/* {img?<img src={URL.createObjectURL(img)} height={100} width={100}></img>:<></>} */}
       </Grid>
     </Grid>
      </Box>

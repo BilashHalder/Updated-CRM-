@@ -1,40 +1,23 @@
-import {React,useState,useEffect} from 'react'
+import {React,useState} from 'react'
 import {Grid,Typography,Box,Button,Stack,Select,MenuItem,FormControl,InputLabel,Switch,FormControlLabel,TextField,Avatar,Divider,Alert,Snackbar,Paper,CircularProgress,Drawer} from '@mui/material';
 import axios from 'axios';
-export default function CustomerNew(props) {
-const {fun}=props;
-  useEffect(() => {
-    
-  if (localStorage) {
 
-    let info=JSON.parse(localStorage.getItem('crzn'));
-      let token=info.token;
-      const instance = axios.create({
-        baseURL: 'http://localhost:9000/api/',
-        headers: {
-                    'Authorization': 'Bearer '+token,
-                    "Content-Type": "multipart/form-data"
-                 }
-      });
 
-    instance.get('employee').then((res)=>{setAllemp(res.data)}).catch((err)=>{console.log(err)});
-  }
-  }, [])
-  
-
-  const [message, setMessage] = useState('');
+export default function Customer(props) {
+  const {ref_key,fun}=props
+  //Common States For All
+  const [message, setMessage] = useState('This is a success alert — check it out!');
   const [alertShow, setAlertShow] = useState(false);
   const [alertColor, setaAertColor] = useState('error');
 
-  const [allemp, setAllemp] = useState([])
-
+//Form State
 const [name, setName] = useState('');
 const [phone, setPhone] = useState('');
 const [email, setEmail] = useState('');
+const [referel, setReferel] = useState(ref_key?ref_key:"");
 const [gender, setGender] = useState('');
-const [commission, setCommission] = useState('');
 const [img, setImg] = useState(null);
-const [emp_id, setEmp_id] = useState(0);
+
 
 
 
@@ -44,6 +27,11 @@ const [emp_id, setEmp_id] = useState(0);
   setAlertShow(false);
  } 
  const formHandler=(e)=>{
+  let referred_by=null;
+  if(!referel)
+   referred_by="ADMIN";
+   else 
+   referred_by=referel;
   let emailReg= /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   e.preventDefault();
 if(name.length<4){
@@ -66,16 +54,6 @@ else if(!gender){
   setMessage('Please Select Gender!');
   setaAertColor('error');
 }
-else if(!emp_id){
-  setAlertShow(true);
-  setMessage('Please Select Employee!');
-  setaAertColor('error');
-}
-else if(!commission){
-  setAlertShow(true);
-  setMessage('Please Enter Commision Rate!');
-  setaAertColor('error');
-}
 else if(!img){
   setAlertShow(true);
   setMessage('Please Upload Image ');
@@ -89,42 +67,34 @@ else if(img.size > 300000){
 }
 
 else{
+
+
   let data = new FormData();
   data.append('name',name);
   data.append('gender',gender);
   data.append('email',email);
-  data.append('commission_rate',commission);
-  data.append('employee_id',emp_id);
   data.append('phone',phone);
+  data.append('referred_by',referred_by);
   data.append('image',img);
-
-  let token=JSON.parse(localStorage.getItem('crzn')).token;
-
-  const instance = axios.create({
-    baseURL: 'http://localhost:9000/api/',
-    headers: {
-                'Authorization': 'Bearer '+token,
-                "Content-Type": "multipart/form-data"
-             }
-  });
-
-
-
-  instance.post('associate',data)
+  axios({
+    method: "post",
+    url: `${baseUrl}/customer`,
+    data: data,
+    headers: { "Content-Type": "multipart/form-data" },
+  })
     .then((response)=> {
       setAlertShow(true);
-      setMessage("Associate Information Saved");
+      setMessage("Cutomer Information Saved");
       setaAertColor('success');
-      fun(Math.random())
       resetForm();
     })
-    .catch((err)=> {
-     if(err.response && err.response.data && err.response.data.message)
-     setMessage(err.response.data.message);
-     else
-     setMessage('Please Try Again Later!');
-     setaAertColor('error');
-     setAlertShow(true);
+    .catch((response)=> {
+      setAlertShow(true);
+      if(response.response.data.message)
+      setMessage(response.response.data.message);
+      else
+      setMessage('Please Try Again Later!');
+      setaAertColor('error');
     });
 }
 
@@ -136,8 +106,7 @@ else{
   setEmail('');
   setPhone('');
   setGender('');
-  setEmp_id('');
-  setCommission('');
+  setReferel('');
   setImg(null);
 
  }
@@ -146,7 +115,7 @@ else{
 
   return (
       <Grid container sx={{'px':'5%','textAlign':'center!important','display':'block','my':'2%','fontFamily':'Playfair Display!important'}} >
-      <Typography align={'center'} variant={'h6'} sx={{'marginBottom':'2%'}}>Add New Associate</Typography>
+      <Typography align={'center'} variant={'h5'} sx={{'marginBottom':'5%'}}>Add New Customer</Typography>
      <Box component='form' onSubmit={formHandler} >
      <Grid container spacing={2} direction="row">
       <Grid item md={4} xs={12}>
@@ -165,13 +134,11 @@ else{
         setPhone(e.target.value);
       }} />
       </Grid>
-
       <Grid item md={4} xs={12}>
-      <TextField label="Commision Rate"  type="number" required fullWidth  InputLabelProps={{ shrink: true}}  value={commission} onChange={(e)=>{
-        setCommission(e.target.value);
-      }} />
+      <TextField label="Referel Code"  type="text"  fullWidth  InputLabelProps={{ shrink: true}} value={referel} onChange={(e)=>{
+        setReferel(e.target.value);
+      }}  />
       </Grid>
-
 
       <Grid item md={4} xs={12}>
       <FormControl fullWidth>
@@ -185,30 +152,12 @@ else{
         </Select>
       </FormControl>
       </Grid >
-
-
-      <Grid item md={4} xs={12}>
-      <FormControl fullWidth>
-        <InputLabel id="Employee">Employee</InputLabel>
-        <Select label="Select Employee"  labelId="Employee"  value={emp_id} onChange={(e)=>{
-        setEmp_id(e.target.value);
-      }} >
-        {
-            allemp.length<1?<MenuItem >No Employee Found</MenuItem>:
-            
-            allemp.map((item)=>{
-              return <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
-            })
-          }
-        </Select>
-      </FormControl>
-      </Grid >
-
       <Grid item md={4} xs={12}>
       <Button  variant="outlined"  component="label" sx={{'my':'2%'}}>
-        Upload Image
-          <input type="file"  hidden accept="image/png, image/gif, image/jpeg"  onChange={(e)=>{
+  Upload Image
+  <input type="file"  hidden accept="image/png, image/gif, image/jpeg"  onChange={(e)=>{
         setImg(e.target.files[0]);
+        console.log(e.target.files[0]);
       }} />
 </Button>
       </Grid>

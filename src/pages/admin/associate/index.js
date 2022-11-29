@@ -94,7 +94,7 @@ export default function index() {
       </TabPanel>
 
       <TabPanel value={value} index={1}>
-         <Associate/>
+         <Associate fun={setFlag}/>
       </TabPanel>
     </Box>
    </Item>
