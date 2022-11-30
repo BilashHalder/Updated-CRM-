@@ -9,6 +9,8 @@ import {Paper} from '@mui/material'
 import axios from 'axios';
 import Associate from 'src/components/admin/Associate';
 import AssociateAll from 'src/components/admin/AssociateAll';
+import Employee from 'src/components/admin/Employee';
+import EmployeeAll from 'src/components/admin/EmployeeAll';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -67,7 +69,7 @@ export default function index() {
                     "Content-Type": "multipart/form-data"
                  }
       });
-         instance.get('associate').then((res)=>setData(res.data)).catch((err)=>{console.log(err)});
+         instance.get('employee').then((res)=>setData(res.data)).catch((err)=>{console.log(err)});
     }
    
   }, [flag])
@@ -82,19 +84,16 @@ export default function index() {
      <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="All Associate" {...a11yProps(0)} />
-          <Tab label="New Associate" {...a11yProps(1)} />
+          <Tab label="All Employee" {...a11yProps(0)} />
+          <Tab label="New Employee" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        {/* {
-          data.length>0?<PendingDeposit data={data} fun={setFlag}/>:<><Typography>No Data Found</Typography></>
-        } */}
-        <AssociateAll data={data} fun={setFlag}/>
+      <EmployeeAll data={data} fun={setFlag}/>
+        <AssociateAll />
       </TabPanel>
-
       <TabPanel value={value} index={1}>
-         <Associate fun={setFlag}/>
+         <Employee fun={setFlag}/>
       </TabPanel>
     </Box>
    </Item>
