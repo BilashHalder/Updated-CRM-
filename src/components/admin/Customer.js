@@ -76,12 +76,20 @@ else{
   data.append('phone',phone);
   data.append('referred_by',referred_by);
   data.append('image',img);
-  axios({
-    method: "post",
-    url: `${baseUrl}/customer`,
-    data: data,
-    headers: { "Content-Type": "multipart/form-data" },
-  })
+
+
+ let token=JSON.parse(localStorage.getItem('crzn')).token;
+	 const instance = axios.create({
+        baseURL: 'http://localhost:9000/api/',
+        headers: {
+                    'Authorization': 'Bearer '+token,
+                    "Content-Type": "multipart/form-data"
+                 }
+      });
+
+  instance.post('customer',data)
+
+
     .then((response)=> {
       setAlertShow(true);
       setMessage("Cutomer Information Saved");

@@ -6,10 +6,9 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import {Paper} from '@mui/material'
-import AllDeposit from 'src/components/admin/AllDeposit';
-import PendingDeposit from 'src/components/admin/PendingDeposit';
-import Deposit from 'src/components/admin/Deposit';
 import axios from 'axios';
+import Associate from 'src/components/admin/Associate';
+import AssociateAll from 'src/components/admin/AssociateAll';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -68,7 +67,7 @@ export default function index() {
                     "Content-Type": "multipart/form-data"
                  }
       });
-         instance.get('deposit').then((res)=>setData(res.data)).catch((err)=>{console.log(err)});
+         instance.get('associate').then((res)=>setData(res.data)).catch((err)=>{console.log(err)});
     }
    
   }, [flag])
@@ -83,24 +82,19 @@ export default function index() {
      <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Pending Deposit" {...a11yProps(0)} />
-          <Tab label="All Deposit" {...a11yProps(1)} />
-          <Tab label="Add New Deposit" {...a11yProps(2)} />
+          <Tab label="All Associate" {...a11yProps(0)} />
+          <Tab label="New Associate" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        {
+        {/* {
           data.length>0?<PendingDeposit data={data} fun={setFlag}/>:<><Typography>No Data Found</Typography></>
-        }
+        } */}
+        <AssociateAll data={data} fun={setFlag}/>
       </TabPanel>
 
       <TabPanel value={value} index={1}>
-         {
-          data.length>0?<AllDeposit data={data} fun={setFlag}/>:<><Typography>No Data Found</Typography></>
-         }
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-       <Deposit/>
+         <Associate fun={setFlag}/>
       </TabPanel>
     </Box>
    </Item>

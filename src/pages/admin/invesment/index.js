@@ -6,10 +6,8 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import {Paper} from '@mui/material'
-import AllDeposit from 'src/components/admin/AllDeposit';
-import PendingDeposit from 'src/components/admin/PendingDeposit';
-import Deposit from 'src/components/admin/Deposit';
 import axios from 'axios';
+import InvesmentList from 'src/components/admin/InvesmentList';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -56,6 +54,10 @@ function a11yProps(index) {
 export default function index() {
   const [value, setValue] = React.useState(0);
   const [data, setData] = useState([]);
+  const [active, setActive] = useState([]);
+  const [close, setClose] = useState([]);
+  const [withdraw, setWithdraw] = useState([]);
+
   const [flag, setFlag] = useState(0)
   useEffect(() => {
     if (localStorage) {
@@ -68,7 +70,15 @@ export default function index() {
                     "Content-Type": "multipart/form-data"
                  }
       });
-         instance.get('deposit').then((res)=>setData(res.data)).catch((err)=>{console.log(err)});
+         instance.get('invesment').then((res)=>{
+          setData(res.data);
+          let temp=res.data.filter((item)=>{return item.status==1});
+          setActive(temp);
+          temp=res.data.filter((item)=>{return item.status==2});
+          setWithdraw(temp);
+          temp=res.data.filter((item)=>{return item.status==3});
+          setClose(temp);
+         }).catch((err)=>{console.log(err)});
     }
    
   }, [flag])
@@ -83,24 +93,24 @@ export default function index() {
      <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Pending Deposit" {...a11yProps(0)} />
-          <Tab label="All Deposit" {...a11yProps(1)} />
-          <Tab label="Add New Deposit" {...a11yProps(2)} />
+          <Tab label="Active Invesment" {...a11yProps(0)} />
+          <Tab label="Withdraw Request" {...a11yProps(1)} />
+          <Tab label="All Invesment" {...a11yProps(2)} />
+          <Tab label="Closed Invesment" {...a11yProps(3)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        {
-          data.length>0?<PendingDeposit data={data} fun={setFlag}/>:<><Typography>No Data Found</Typography></>
-        }
+      <InvesmentList data={active} title={"Active Invesment List"} fun={setFlag}/>
       </TabPanel>
 
       <TabPanel value={value} index={1}>
-         {
-          data.length>0?<AllDeposit data={data} fun={setFlag}/>:<><Typography>No Data Found</Typography></>
-         }
+      <InvesmentList data={withdraw} title={"Withdraw Requseted Invesment List"} fun={setFlag}/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-       <Deposit/>
+      <InvesmentList data={data} title={"All Invesment List"} fun={setFlag}/>
+      </TabPanel>
+      <TabPanel value={value} index={3} fun={setFlag}>
+      <InvesmentList data={close} title={"Close Invesment List"}/>
       </TabPanel>
     </Box>
    </Item>

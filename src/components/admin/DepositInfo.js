@@ -13,7 +13,9 @@ export default function DepositInfo(props) {
   const [tid, settid] = useState('')
   const [ttype, setttype] = useState(1)
   const [amount, setAmount] = useState();
-  const [img, setImg] = useState(null)
+  const [img, setImg] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [remarks, setRemarks] = useState('')
 //Common Functions For All
  const snackClose=()=>{
   setAlertShow(false);
@@ -131,10 +133,21 @@ else{
           </TableRow>
           {
             data.status==0?<TableRow>
+
             <TableCell align="center"  scope="row">
               <Stack direction="row" spacing={2}>
-              <Button variant="outlined" color="success">Accept</Button>
-              <Button variant="outlined" color="error">Reject</Button>
+                {
+                  showForm?<>
+                  
+                  <TextField label="Reason"  type="text" required fullWidth  InputLabelProps={{ shrink: true}}  value={remarks} onChange={(e)=>{
+                  setRemarks(e.target.value); }} />
+                  <Button variant="outlined" color="success" >Save</Button>
+      
+      </>: <><Button variant="outlined" color="success" >Accept</Button>
+       <Button variant="outlined" color="error" onClick={()=>setShowForm(true)}>Reject</Button></>
+                }
+             
+             
               </Stack>
   
             </TableCell>
