@@ -6,7 +6,6 @@ import axios from 'axios';
 export default function DepositInfo(props) {
   const { data, fun } = props;
   let temp=data;
-  console.log(temp)
   //Common States For All
   const [message, setMessage] = useState('This is a success alert — check it out!');
   const [alertShow, setAlertShow] = useState(false);

@@ -83,24 +83,24 @@ export default function index() {
      <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Pending Deposit" {...a11yProps(0)} />
-          <Tab label="All Deposit" {...a11yProps(1)} />
-          <Tab label="Add New Deposit" {...a11yProps(2)} />
+          <Tab label="Leave List" {...a11yProps(0)} />
+          <Tab label="Add Leave" {...a11yProps(1)} />
+          <Tab label="Leave Request" {...a11yProps(2)} />
+          <Tab label="Holiday" {...a11yProps(3)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        {
-          data.length>0?<PendingDeposit data={data} fun={setFlag}/>:<><Typography>No Data Found</Typography></>
-        }
+      Leave List
       </TabPanel>
 
       <TabPanel value={value} index={1}>
-         {
-          data.length>0?<AllDeposit data={data} fun={setFlag}/>:<><Typography>No Data Found</Typography></>
-         }
+      Add Leave
       </TabPanel>
       <TabPanel value={value} index={2}>
-       <Deposit/>
+      Leave Request
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+      Holiday list & from
       </TabPanel>
     </Box>
    </Item>

@@ -46,3 +46,4 @@ export default function index() {
     }</div>
   )
 }
+INSERT INTO `work_report`(`employee_id`, `report_date`, `start_time`) VALUES (1,CURRENT_DATE,CURRENT_TIME)

@@ -140,10 +140,12 @@ const LoginPage = () => {
   }
 
   const employeeLogin=()=>{
-    let data = new FormData();
-    data.append('id',uid);
-    data.append('pass',values.password);
-    axios({
+    navigator.geolocation.getCurrentPosition((loc)=>{
+      let data = new FormData();
+      data.append('id',uid);
+      data.append('pass',values.password);
+      data.append('login_location',loc.coords.latitude+','+loc.coords.longitude);     
+ axios({
       method: "post",
       url: `http://localhost:9000/api/login/employee`,
       data: data,
@@ -165,6 +167,13 @@ const LoginPage = () => {
         setMsg("Invalid Employee Credentials");
         setOpen(true);
       });
+
+    },(err)=>{
+      setSevcolor('error');
+    setMsg("Please Allow Location Access");
+    setOpen(true);
+    });
+  
   }
 
   const adminLogin=()=>{

@@ -8,7 +8,7 @@ import { useEffect,useState } from "react";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
-
+import HistoryToggleOffIcon from '@mui/icons-material/HistoryToggleOff';
 const Adminnavigation = () => {
   const [role, setRole] = useState(null);
   useEffect(() => {
@@ -78,9 +78,9 @@ else{
       path: '/admin/request'
     },
     {
-      icon: CubeOutline,
-      title: 'Others',
-      path: '/admin/others'
+      icon: HistoryToggleOffIcon,
+      title: 'Leave',
+      path: '/admin/leave'
     }
   ];
 
