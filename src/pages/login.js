@@ -145,7 +145,7 @@ const LoginPage = () => {
       data.append('id',uid);
       data.append('pass',values.password);
       data.append('login_location',loc.coords.latitude+','+loc.coords.longitude);     
- axios({
+     axios({
       method: "post",
       url: `http://localhost:9000/api/login/employee`,
       data: data,

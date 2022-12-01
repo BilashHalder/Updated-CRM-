@@ -10,6 +10,9 @@ import AllDeposit from 'src/components/admin/AllDeposit';
 import PendingDeposit from 'src/components/admin/PendingDeposit';
 import Deposit from 'src/components/admin/Deposit';
 import axios from 'axios';
+import Leave from 'src/components/admin/Leave';
+import LeaveList from 'src/components/admin/LeaveList';
+import LeaveRequestList from 'src/components/admin/LeaveRequestList';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -56,7 +59,8 @@ function a11yProps(index) {
 export default function index() {
   const [value, setValue] = React.useState(0);
   const [data, setData] = useState([]);
-  const [flag, setFlag] = useState(0)
+  const [flag, setFlag] = useState(0);
+  const [requestlist, setrequest] = useState([]);
   useEffect(() => {
     if (localStorage) {
       let info=JSON.parse(localStorage.getItem('crzn'));
@@ -68,7 +72,8 @@ export default function index() {
                     "Content-Type": "multipart/form-data"
                  }
       });
-         instance.get('deposit').then((res)=>setData(res.data)).catch((err)=>{console.log(err)});
+         instance.get('leave').then((res)=>setData(res.data)).catch((err)=>{console.log(err)});
+         instance.get('apply_leave').then((res)=>setrequest(res.data)).catch((err)=>{console.log(err)});
     }
    
   }, [flag])
@@ -90,14 +95,14 @@ export default function index() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-      Leave List
+        <LeaveList data={data} fun={setFlag}/>
       </TabPanel>
 
       <TabPanel value={value} index={1}>
-      Add Leave
+      <Leave fun={setFlag}/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-      Leave Request
+        <LeaveRequestList data={requestlist}/>
       </TabPanel>
       <TabPanel value={value} index={3}>
       Holiday list & from
