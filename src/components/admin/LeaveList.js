@@ -90,7 +90,7 @@ export default function LeaveList(props) {
   return (
     <Grid container sx={{'textAlign':'center!important','display':'block','my':'2%','fontFamily':'Playfair Display!important'}}>
   
-  <Button onClick={()=>{exportFromJSON({ data, fileName, exportType })}}>Download CSV</Button>
+  {/* <Button onClick={()=>{exportFromJSON({ data, fileName, exportType })}}>Download CSV</Button> */}
    
          <DataTable
             columns={columns}

@@ -5,14 +5,12 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import {Paper} from '@mui/material'
-import AllDeposit from 'src/components/admin/AllDeposit';
-import PendingDeposit from 'src/components/admin/PendingDeposit';
-import Deposit from 'src/components/admin/Deposit';
+import {Grid, Paper} from '@mui/material'
 import axios from 'axios';
 import Leave from 'src/components/admin/Leave';
 import LeaveList from 'src/components/admin/LeaveList';
 import LeaveRequestList from 'src/components/admin/LeaveRequestList';
+import Holidays from 'src/components/admin/Holidays';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -73,7 +71,11 @@ export default function index() {
                  }
       });
          instance.get('leave').then((res)=>setData(res.data)).catch((err)=>{console.log(err)});
-         instance.get('apply_leave').then((res)=>setrequest(res.data)).catch((err)=>{console.log(err)});
+         instance.get('holidays').then((res)=>setholidays(res.data)).catch((err)=>{console.log(err)});
+         instance.get('leave_application').then((res)=>{
+          let pending=res.data.filter((item)=>{return item.status='0'})
+          setrequest(pending);
+         }).catch((err)=>{console.log(err)});
     }
    
   }, [flag])
@@ -105,7 +107,7 @@ export default function index() {
         <LeaveRequestList data={requestlist}/>
       </TabPanel>
       <TabPanel value={value} index={3}>
-      Holiday list & from
+      <Holidays/>
       </TabPanel>
     </Box>
    </Item>

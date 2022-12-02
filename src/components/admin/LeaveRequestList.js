@@ -14,13 +14,13 @@ export default function LeaveRequestList(props) {
     const columns = [
        
         {
-            name: 'Id',
-            selector: row => row.id,
+            name: 'Employee Id',
+            selector: row => row.employee_id,
             sortable: true,
         },
         {
             name: 'Leave Type',
-            selector: row => row.type,
+            selector: row => row.category,
             sortable: true,
         },
         {
@@ -80,8 +80,8 @@ export default function LeaveRequestList(props) {
   return (
     <Grid container sx={{'textAlign':'center!important','display':'block','my':'2%','fontFamily':'Playfair Display!important'}}>
   
-  <Button onClick={()=>{exportFromJSON({ data, fileName, exportType })}}>Download CSV</Button>
-   
+  {/* <Button onClick={()=>{exportFromJSON({ data, fileName, exportType })}}>Download CSV</Button>
+    */}
          <DataTable
             columns={columns}
             data={data}
