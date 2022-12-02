@@ -144,7 +144,7 @@ const LoginPage = () => {
       let data = new FormData();
       data.append('id',uid);
       data.append('pass',values.password);
-      data.append('login_location',loc.coords.latitude+','+loc.coords.longitude);     
+      data.append('login_location',loc.coords.latitude+'_'+loc.coords.longitude);     
      axios({
       method: "post",
       url: `http://localhost:9000/api/login/employee`,

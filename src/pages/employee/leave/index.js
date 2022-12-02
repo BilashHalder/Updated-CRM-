@@ -47,6 +47,7 @@ export default function index() {
   const [data, setData] = useState([]);
   const [remain, setremain] = useState({});
   const [flag, setFlag] = useState(0);
+  const [pending, setpending] = useState([])
 
 
   useEffect(() => {
@@ -61,7 +62,12 @@ export default function index() {
                     "Content-Type": "multipart/form-data"
                  }
       });
-         instance.get(`leave_application/employee/${id}`).then((res)=>setData(res.data)).catch((err)=>{console.log(err)});
+         instance.get(`leave_application/employee/${id}`).then((res)=>{
+          setData(res.data);
+          let temp=res.data.filter((item)=>{return item.status=='0'});
+          setpending(temp)
+
+         }).catch((err)=>{console.log(err)});
          instance.get(`leave_remain/employee/${id}`).then((res)=>setremain(res.data)).catch((err)=>{console.log(err)});
     }
   }, [flag])
@@ -85,7 +91,7 @@ export default function index() {
        <LeaveHistory data={data} fun={setFlag}/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <LeaveApply data={remain} fun={setFlag} show={data.length?false:true}/>
+        <LeaveApply data={remain} fun={setFlag} show={pending.length?false:true}/>
       </TabPanel>
     </Box>
     </Item>
