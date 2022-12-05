@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function index() {
   return (
-    <div>Admin DashBoard</div>
+    <div>Admin DashBoard dfdsafsdfvsdfvsdf</div>
   )
 }

@@ -43,8 +43,7 @@ export default function RequestView(props) {
       }
   return (
     <Grid container sx={{ 'px': '5%', 'textAlign': 'center!important', 'display': 'block', 'my': '2%', 'fontFamily': 'Playfair Display!important' }} >
-    <Typography align={'center'} variant={'h5'} sx={{ 'marginBottom': '5%' }}>Request Information</Typography>
-    <Divider sx={{marginTop:0}}/>
+    <Typography align={'center'} variant={'h5'} sx={{ 'marginBottom': '5%' }}>Deposit Information</Typography>
     <Box>
       <TableContainer component={Paper}>
         <Table >

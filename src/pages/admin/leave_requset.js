@@ -4,6 +4,7 @@ import { Item } from "src/util/lib";
 import axios from "axios";
 import RequestView from "src/components/request/RequestView";
 import LeaveRequests from "src/components/leave/LeaveRequests";
+import LeaveRequestView from "src/components/leave/LeaveRequestView";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -89,7 +90,7 @@ export default function leave_requset() {
           />
         </TabPanel>
         <TabPanel value={tab} index={2}>
-          {view ? <RequestView data={view} fun={setFlag} /> : <>Invalid Request</>}
+          {view ? <LeaveRequestView data={view} fun={setFlag} /> : <>Invalid Request</>}
         </TabPanel>
       </Item>
     </Box>
