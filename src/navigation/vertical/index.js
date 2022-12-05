@@ -81,6 +81,11 @@ else{
       icon: HistoryToggleOffIcon,
       title: 'Leave',
       path: '/admin/leave'
+    },
+    {
+      icon: HistoryToggleOffIcon,
+      title: 'Leave Request',
+      path: '/admin/leave_requset'
     }
   ];
 
