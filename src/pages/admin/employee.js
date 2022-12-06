@@ -77,7 +77,7 @@ export default function employee() {
         <TabPanel value={tab} index={1}>
           <Employee fun={setFlag}/>
         </TabPanel>
-        <TabPanel value={tab} index={2}>
+         <TabPanel value={tab} index={2}>
           {
             view?<EmployeeView data={view}></EmployeeView>:<>Invalid Request</>
           }

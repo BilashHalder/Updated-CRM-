@@ -1,6 +1,6 @@
 import {React,useState,useEffect} from 'react'
 import axios from 'axios';
-import { Typography,Grid, Box,TextField,FormControl,InputLabel ,Select,MenuItem ,Button  ,Stack   } from '@mui/material';
+import { Typography,Grid, Box,TextField,FormControl,InputLabel ,Select,MenuItem ,Button,Stack} from '@mui/material';
 import EmployeeOthers from './EmployeeOthers';
 
 export default function EmployeeEdit(props) {
@@ -9,12 +9,12 @@ export default function EmployeeEdit(props) {
   const [allLeave, setallLeave] = useState([]);
 
   
-const [name, setName] = useState('');
-const [phone, setPhone] = useState('');
-const [email, setEmail] = useState('');
-const [gender, setGender] = useState('');
+const [name, setName] = useState(props.data.name);
+const [phone, setPhone] = useState(props.data.phone);
+const [email, setEmail] = useState(props.data.email);
+const [gender, setGender] = useState(props.data.gender);
 const [img, setImg] = useState(null);
-const [empid, setEmpid] = useState(null);
+const [empid, setEmpid] = useState(props.data.id);
 const [message, setMessage] = useState('This is a success alert — check it out!');
 const [alertShow, setAlertShow] = useState(false);
 const [alertColor, setaAertColor] = useState('error');
@@ -58,18 +58,18 @@ const resetForm=()=>{
          <Box component={'form'} sx={{marginTop:10}}>
          <Grid container spacing={2} direction="row">
    <Grid item md={4} xs={12}>
-   <TextField label="Full Name"  type="text" required fullWidth  InputLabelProps={{ shrink: true}}  value={name} onChange={(e)=>{
+   <TextField label="Full Name"  type="text" required fullWidth   InputLabelProps={{ shrink: true}}  value={name} onChange={(e)=>{
      setName(e.target.value);
    }}  />
    </Grid>
    <Grid item md={4} xs={12}>
-   <TextField label="Email Id"  type="email" required fullWidth  InputLabelProps={{ shrink: true}} value={email} onChange={(e)=>{
+   <TextField label="Email Id"  type="email" required fullWidth disabled InputLabelProps={{ shrink: true}} value={email} onChange={(e)=>{
      setEmail(e.target.value);
    }}  />
    </Grid>
 
    <Grid item md={4} xs={12}>
-   <TextField label="Phone No"  type="number" required fullWidth  InputLabelProps={{ shrink: true}} value={phone} onChange={(e)=>{
+   <TextField label="Phone No"  type="number" required fullWidth disabled InputLabelProps={{ shrink: true}} value={phone} onChange={(e)=>{
      setPhone(e.target.value);
    }}  />
    </Grid>
