@@ -3,6 +3,7 @@ import {Tabs,Tab,Typography,Box,Grid} from "@mui/material";
 import { Item } from "src/util/lib";
 import axios from 'axios';
 import Invesment from "src/components/invesment/Invesment";
+import InvesmentsList from "src/components/invesment/InvesmentList";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -27,6 +28,18 @@ export default function invesment() {
   const [tab, setTab] = useState(0);
   const [flag, setFlag] = useState(0);
   const [id, setid] = useState(null);
+  const [actives, setactive] = useState([]);
+  const [pending, setpending] = useState([]);
+  const [closed, setclosed] = useState([]);
+  const [Withdrawals, setWithdrawals] = useState([]);
+const viewFun=(item)=>{
+  console.log(item);
+}
+
+
+
+
+
   const [nominee, setnominee] = useState([]);
 
 
@@ -46,7 +59,17 @@ export default function invesment() {
                     "Content-Type": "multipart/form-data"
                  }
       });
-         instance.get('invesment').then((res)=>setnominee(res.data)).catch((err)=>{console.log(err)});
+         instance.post('invesment/user',fd).then((res)=>{
+          //	0-pending 1-Active 2-withdraw 3-close	
+            let temp=res.data.filter((item)=>{return item.status==0})
+            setpending(temp);
+            temp=res.data.filter((item)=>{return item.status==1})
+            setactive(temp);
+            temp=res.data.filter((item)=>{return item.status==2})
+            setWithdrawals(temp);
+            temp=res.data.filter((item)=>{return item.status==3})
+            setclosed(temp);
+         }).catch((err)=>{console.log(err)});
     }
   }, [flag]);
   const handleChange = (event, newValue) => {
@@ -73,10 +96,12 @@ export default function invesment() {
           id?<Invesment user_id={id} user_type={1} fun={setFlag}/>:<></>
         }
         </TabPanel>
-        <TabPanel value={tab} index={1}> </TabPanel> 
-        <TabPanel value={tab} index={2}> </TabPanel> 
-        <TabPanel value={tab} index={3}> </TabPanel> 
-        <TabPanel value={tab} index={4}> </TabPanel> 
+        <TabPanel value={tab} index={1}>
+          <InvesmentsList data={actives} viewfun={viewFun} title="Your Active Invesment"/>
+          </TabPanel> 
+         <TabPanel value={tab} index={2}> <InvesmentsList data={pending} viewfun={viewFun} title="Your Pending Invesment"/> </TabPanel> 
+         <TabPanel value={tab} index={3}> <InvesmentsList data={Withdrawals} viewfun={viewFun} title="Your Withdrawal Invesment"/> </TabPanel> 
+          <TabPanel value={tab} index={4}> <InvesmentsList data={closed} viewfun={viewFun} title="Your Closed Invesment"/> </TabPanel> 
 </Grid>
 </Grid>
   </Item>
