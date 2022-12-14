@@ -92,7 +92,7 @@ else{
     })
     .catch((response)=> {
       setAlertShow(true);
-      if(response.response.data.message)
+      if(response.response.data)
       setMessage(response.response.data.message);
       else
       setMessage('Please Try Again Later!');
