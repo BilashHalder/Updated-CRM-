@@ -1,7 +1,7 @@
 import React from 'react'
 
-export default function CustomerView() {
+export default function CustomerView(props) {
   return (
-    <div>CustomerView</div>
+    <div>Customer View</div>
   )
 }

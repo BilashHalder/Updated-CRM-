@@ -5,8 +5,8 @@ const fileName = 'depositList'
 const exportType =  exportFromJSON.types.csv;
 import DataTable from 'react-data-table-component';
 
-export default function Deposits(props) {
-    const {data,viewfun,title}=props
+export default function DepositList(props) {
+    const {data}=props
     const columns = [
         {
             name: 'Id',
@@ -31,12 +31,6 @@ export default function Deposits(props) {
             name: 'Status',
             selector: row => <Chip label={row.status==0?"Pending":row.status==1?"Sucessfull":"Rejected"} color={row.status==0?"primary":row.status==1?"success":"error"} size={'small'}></Chip>,
         },
-        {
-            name: 'Action',
-            selector: row =><ButtonGroup variant="text">
-            <Button  color="info" onClick={()=>{ viewfun(row) }}>View</Button>
-          </ButtonGroup>
-        },
     ];
 
     const [viewData, setviewData] = useState(null);
@@ -49,8 +43,6 @@ export default function Deposits(props) {
   return (
     <Grid container sx={{'textAlign':'center!important','display':'block','my':'2%','fontFamily':'Playfair Display!important'}}>
   
-  {/* <Button onClick={()=>{exportFromJSON({ data, fileName, exportType })}}>Download CSV</Button>
-    */}
          <DataTable
             columns={columns}
             data={data}
@@ -58,7 +50,7 @@ export default function Deposits(props) {
             responsive
             fixedHeader={true}
             fixedHeaderScrollHeight={'400px'}
-            title={title}
+            title={'Deposit History'}
             highlightOnHover={true}
 
         />
