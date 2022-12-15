@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import {Tabs,Tab,Typography,Box} from "@mui/material";
 import { Item } from "src/util/lib";
 import axios from 'axios';
-import Leaves from "src/components/leave/Leaves";
-import Leave from "src/components/leave/Leave";
-import Holiday from "src/components/leave/Holiday";
 import BankAccount from "src/components/account/BankAccount";
 import BankAccounts from "src/components/account/BankAccounts";
 function TabPanel(props) {

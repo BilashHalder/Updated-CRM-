@@ -16,7 +16,7 @@ export default function Qualification() {
           setId(id);
           let data=new FormData();
           data.append('user_id',id);
-          data.append('user_type',1);
+          data.append('user_type',3);
     
           const instance = axios.create({
             baseURL: 'http://localhost:9000/api/',

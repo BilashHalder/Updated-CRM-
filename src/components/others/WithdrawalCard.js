@@ -46,21 +46,29 @@ export default function WithdrawalCard(props) {
     <Typography>{parseFloat(info.balance).toFixed(2)} INR</Typography>
   </Stack></>:<></>
    }
+
+<Grid container sx={{marginTop:'5%'}} spacing={4}>
+
+<Grid md={4} item>
 {
-    bankAccount.length?<><Stack sx={{marginTop:5}} spacing={5}>
-    <FormControl fullWidth>
-            <InputLabel id="account">Bank Account</InputLabel>
-            <Select label="Select Bank Account"  labelId="account" value={account} onChange={(e)=>{setAccount(e.target.value)}}>
-            {
-                bankAccount.length<1?<MenuItem >Please Add Bank Account</MenuItem>:
-                bankAccount.map((item)=>{
-                  return <MenuItem value={item.account_no}>{item.account_no}  [ {item.bank} ]</MenuItem>
-                })
-              }
-            </Select>
-          </FormControl>
-    <TextField label="Withdrawal Amount"  type="number"  fullWidth  InputLabelProps={{ shrink: true}}  onChange={(e)=>{setamount(e.target.value<1?0:e.target.value)}} value={amount}/>
-    <Button color={'success'} sx={{marginTop:5}} variant={'outlined'} onClick={
+  bankAccount.length?  <FormControl fullWidth>
+  <InputLabel id="account">Bank Account</InputLabel>
+  <Select label="Select Bank Account"  labelId="account" value={account} onChange={(e)=>{setAccount(e.target.value)}}>
+  {
+      bankAccount.length<1?<MenuItem >Please Add Bank Account</MenuItem>:
+      bankAccount.map((item)=>{
+        return <MenuItem value={item.account_no}>{item.account_no}  [ {item.bank} ]</MenuItem>
+      })
+    }
+  </Select>
+</FormControl>:<><Typography>Please Add Bank Account</Typography></>
+}
+</Grid>
+<Grid md={4} item>
+<TextField label="Withdrawal Amount"  type="number"  fullWidth  InputLabelProps={{ shrink: true}}  onChange={(e)=>{setamount(e.target.value<1?0:e.target.value)}} value={amount}/>
+</Grid>
+<Grid md={4} item>
+<Button color={'success'} sx={{marginTop:5}} variant={'outlined'} size={'small'} onClick={
         ()=>{
             if(amount<1 || !amount)
             setmsg("Please Enter A Valid Amount")
@@ -71,9 +79,11 @@ export default function WithdrawalCard(props) {
             }
     
         }
-    }>Send Withdrawal Request</Button>
-    </Stack></>:<></>
-}
+    }>Withdrawal</Button>
+</Grid>
+</Grid>
+
+
 {
     msg?<Typography color={'error'}>{msg}</Typography>:<></>
 }
