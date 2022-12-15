@@ -1,13 +1,15 @@
 import {React,useState,useEffect} from 'react'
 import axios from 'axios';
-import { Typography,Grid, Box,TextField,FormControl,InputLabel ,Select,MenuItem ,Button,Stack} from '@mui/material';
+import { Typography,Grid, Snackbar,Alert  ,Box,TextField,FormControl,InputLabel ,Select,MenuItem ,Button,Stack} from '@mui/material';
 import EmployeeOthers from './EmployeeOthers';
 
 export default function EmployeeEdit(props) {
   const [allsalary, setAllSalary] = useState([]);
   const [alldesignation, setAlldesignation] = useState([]);
   const [allLeave, setallLeave] = useState([]);
-
+  const snackClose=()=>{
+    setAlertShow(false);
+   }
   
 const [name, setName] = useState(props.data.name);
 const [phone, setPhone] = useState(props.data.phone);
@@ -21,6 +23,32 @@ const [alertColor, setaAertColor] = useState('error');
 
 
 const resetForm=()=>{
+
+}
+
+const handleForm=(e)=>{
+e.preventDefault();
+let token=JSON.parse(localStorage.getItem('crzn')).token;
+const instance = axios.create({
+  baseURL: 'http://localhost:9000/api/',
+  headers: {
+              'Authorization': 'Bearer '+token,
+              "Content-Type": "multipart/form-data"
+           }
+});
+
+let temp=new FormData();
+temp.append('gender',gender);
+if(img){
+  temp.append('image',img);
+}
+
+instance.put(`employee/${props.data.id}`,temp).then((res)=>{
+     setMessage("Employee Information Updated");
+      setaAertColor('success');
+      setAlertShow(true);
+}).catch((err)=>{console.log(err)});
+
 
 }
 
@@ -55,7 +83,7 @@ const resetForm=()=>{
    <Grid container>
     <Grid md={12} sx={{marginTop:10}}>
     <Typography variant='h5' component={'h5'}>Update Basic Information</Typography>
-         <Box component={'form'} sx={{marginTop:10}}>
+         <Box component={'form'} sx={{marginTop:10}} onSubmit={handleForm}>
          <Grid container spacing={2} direction="row">
    <Grid item md={4} xs={12}>
    <TextField label="Full Name"  type="text" required fullWidth   InputLabelProps={{ shrink: true}}  value={name} onChange={(e)=>{
@@ -112,10 +140,14 @@ Upload Image
       </Box>
     </Grid>
     <Grid md={12}>
-      <EmployeeOthers id={props.data.id}/>
+      <EmployeeOthers id={props.data.id} fun={props.fun}/>
     </Grid>
     <Grid md={12}>
-      
+    <Snackbar open={alertShow}
+     autoHideDuration={2000} onClose={snackClose}>
+   <Alert severity={alertColor}>{message}</Alert>
+   </Snackbar>
+
     </Grid>
    </Grid>
   )

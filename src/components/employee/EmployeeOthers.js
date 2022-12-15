@@ -6,17 +6,16 @@ import EmployeeInfoEdit from './EmployeeInfoEdit';
 import EmployeeInfo from './EmployeeInfo';
 import Qualifications from '../qualification/Qualifications';
 import Qualification from '../qualification/Qualification';
-import KycView from '../kyc/KycView';
 import KycEdit from '../kyc/KycEdit';
 import Kyc from '../kyc/Kyc';
 
 
 
 export default function EmployeeOthers(props) {
-
     const [info, setinfo] = useState(null);
     const [allquf, setallquf] = useState([]);
     const [kyc, setkyc] = useState(null);
+    const [flag, setflag] = useState(0)
 
   useEffect(() => {
     if (localStorage) {
@@ -38,7 +37,7 @@ export default function EmployeeOthers(props) {
 
     }
    
-  }, []);
+  }, [flag]);
 
 
   
@@ -48,7 +47,7 @@ export default function EmployeeOthers(props) {
     <Grid item md={12}>
 
 {
-  info?<><EmployeeInfoEdit data={info}/></>:<><EmployeeInfo id={props.id}/></>
+  info?<><EmployeeInfoEdit data={info} /></>:<><EmployeeInfo id={props.id} fun={setflag}/></>
 }
 
     <Divider/>
@@ -61,7 +60,7 @@ export default function EmployeeOthers(props) {
       <Qualification emp_id={props.id}/>
       <Divider/>
       {
-        kyc?<><KycEdit data={kyc}/></>:<><Kyc user_id={props.id} user_type={3}/></>
+        kyc?<><KycEdit data={kyc}/></>:<><Kyc data={{user_id:props.id, user_type:3}}/></>
       }
 
     </Grid>

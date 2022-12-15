@@ -1,7 +1,12 @@
-import React from 'react'
+import {React,useState,useEffect} from 'react'
+import { Grid ,Typography} from "@mui/material";
+export default function EmployeeView(props) {
 
-export default function EmployeeView() {
+ const {id,name,gender,email,phone,balance,status}=props.data;
+ console.log(props.data)
   return (
-    <div>EmployeeView</div>
+    <Grid>
+     <Typography sx={{textAlign:'center',fontWeight:600}} variant={"p"} component={'p'} >Basic Information</Typography> 
+    </Grid>
   )
 }

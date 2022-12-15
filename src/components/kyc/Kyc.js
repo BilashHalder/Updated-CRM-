@@ -1,10 +1,10 @@
 import {React,useState} from 'react'
 import {Grid,Typography,Box,Button,Stack,TextField,Alert,Snackbar} from '@mui/material';
 import axios from 'axios';
-import {baseUrl} from '../../util/lib';
 export default function Kyc(props) {
     const { data}=props;
-    const {fun}=data;
+    
+    // const {fun}=data;
 
     const [message, setMessage] = useState('');
     const [alertShow, setAlertShow] = useState(false);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Tabs,Tab,Typography,Box} from "@mui/material";
+import { Tabs, Tab, Typography, Box } from "@mui/material";
 import { Item } from "src/util/lib";
 import axios from 'axios';
 import EmployeeEdit from "src/components/employee/EmployeeEdit";
@@ -8,7 +8,6 @@ import Employees from "src/components/employee/Employees";
 import Employee from "src/components/employee/Employee";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-
   return (
     <div
       role="tabpanel"
@@ -26,6 +25,8 @@ function TabPanel(props) {
   );
 }
 
+
+
 export default function employee() {
   const [tab, setTab] = useState(0);
   const [data, setData] = useState([]);
@@ -33,29 +34,28 @@ export default function employee() {
   const [edit, setedit] = useState(null);
   const [view, setview] = useState(null)
 
-  const viewData=(item)=>{
-
+  const viewData = (item) => {
     setview(item);
     setTab(2);
   };
 
-  const editData=(item)=>{
-  setedit(item);
+  const editData = (item) => {
+    setedit(item);
     setTab(3);
   };
 
   useEffect(() => {
     if (localStorage) {
-      let info=JSON.parse(localStorage.getItem('crzn'));
-      let token=info.token;
+      let info = JSON.parse(localStorage.getItem('crzn'));
+      let token = info.token;
       const instance = axios.create({
         baseURL: 'http://localhost:9000/api/',
         headers: {
-                    'Authorization': 'Bearer '+token,
-                    "Content-Type": "multipart/form-data"
-                 }
+          'Authorization': 'Bearer ' + token,
+          "Content-Type": "multipart/form-data"
+        }
       });
-         instance.get('employee').then((res)=>setData(res.data)).catch((err)=>{console.log(err)});
+      instance.get('employee').then((res) => setData(res.data)).catch((err) => { console.log(err) });
     }
   }, [flag]);
   const handleChange = (event, newValue) => {
@@ -72,20 +72,26 @@ export default function employee() {
       </Box>
       <Item>
         <TabPanel value={tab} index={0}>
-         <Employees data={data}  editfun={editData} viewfun={viewData}/>
+          <Employees data={data} editfun={editData} viewfun={viewData} />
         </TabPanel>
+
         <TabPanel value={tab} index={1}>
-          <Employee fun={setFlag}/>
+          <Employee fun={setFlag} />
         </TabPanel>
-         <TabPanel value={tab} index={2}>
+
+        <TabPanel value={tab} index={2}>
           {
-            view?<EmployeeView data={view}></EmployeeView>:<>Invalid Request</>
+            view ? <EmployeeView data={view}></EmployeeView> : <>Invalid Request</>
           }
         </TabPanel>
+
+        
         <TabPanel value={tab} index={3}>
-         {
-          edit?<EmployeeEdit data={edit} fun={setFlag}></EmployeeEdit>:<>Invalid Request</>
-         }
+          {
+            edit ? <EmployeeEdit data={edit} fun={setFlag}></EmployeeEdit> : <>Invalid Request</>
+          }
+
+          
         </TabPanel>
       </Item>
     </Box>
