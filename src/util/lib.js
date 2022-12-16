@@ -1,6 +1,7 @@
 const baseUrl='http://localhost:9000/api/';
 const imageUrl='http://localhost:9000/uploads/images';
 const docUrl='http://localhost:9000/uploads/documents';
+import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import {Paper} from '@mui/material'
 const Item = styled(Paper)(({ theme }) => ({
@@ -10,6 +11,27 @@ const Item = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
   }));
+
+
+
+
+
+const connection=(token)=>{
+   let temp= axios.create({
+        baseURL: 'http://localhost:9000/api/',
+        headers: {
+                    'Authorization': 'Bearer '+token,
+                    "Content-Type": "multipart/form-data"
+                 }
+      });
+      return temp;
+}
+
+
+
+
+
+
 
 
 const convertArrayOfObjectsToCSV=(args)=>{  
@@ -116,4 +138,4 @@ return 1000;
 const calculateSalary=(data)=>{
 return 1000;
 }
-module.exports={baseUrl,imageUrl,docUrl,downloadCSV,Item,msDateToTodayDifference,calculateReturn,calculateSalary}
+module.exports={baseUrl,imageUrl,docUrl,downloadCSV,Item,msDateToTodayDifference,calculateReturn,calculateSalary,connection}

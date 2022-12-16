@@ -6,7 +6,7 @@ import {baseUrl} from '../../util/lib'
 
 
 export default function Qualification(props) {
-  const {emp_id}=props;
+  const {emp_id,fun}=props;
 
   const [message, setMessage] = useState('');
   const [alertShow, setAlertShow] = useState(false);
@@ -90,6 +90,9 @@ else {
       setAlertShow(true);
       setMessage("Qualification Information Saved");
       setaAertColor('success');
+      if(fun){
+        fun(Math.random());
+      }
       resetForm();
     })
     .catch((response)=> {

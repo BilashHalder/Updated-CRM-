@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, Tab, Typography, Box } from "@mui/material";
-import { Item } from "src/util/lib";
-import axios from 'axios';
+import { Item ,connection} from "src/util/lib";
+
 import EmployeeEdit from "src/components/employee/EmployeeEdit";
 import EmployeeView from "src/components/employee/EmployeeView";
 import Employees from "src/components/employee/Employees";
@@ -48,13 +48,7 @@ export default function employee() {
     if (localStorage) {
       let info = JSON.parse(localStorage.getItem('crzn'));
       let token = info.token;
-      const instance = axios.create({
-        baseURL: 'http://localhost:9000/api/',
-        headers: {
-          'Authorization': 'Bearer ' + token,
-          "Content-Type": "multipart/form-data"
-        }
-      });
+      const instance = connection(token);
       instance.get('employee').then((res) => setData(res.data)).catch((err) => { console.log(err) });
     }
   }, [flag]);

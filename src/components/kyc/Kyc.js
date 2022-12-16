@@ -68,14 +68,13 @@ export default function Kyc(props) {
             resetForm();
           })
           .catch((err)=> {
-            console.log(err)
             setAlertShow(true);
-            if(err.response.data.message){
+            if(err.response){
               setMessage(err.response.data.message);
             }
             else 
-            setMessage('Please Try Again Later!');
-            setaAertColor('error');
+          {setMessage('Please Try Again Later!');
+          setaAertColor('error');}
       
           });
 
